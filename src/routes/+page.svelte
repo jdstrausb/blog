@@ -1,14 +1,14 @@
 <script lang="ts">
   import type { PageData } from './$types';
+  import Header from '$lib/components/Header.svelte';
 
   let { data }: { data: PageData } = $props();
 </script>
 
 <div class="max-w-2xl mx-auto py-8 px-4">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-3xl font-bold">My Blog</h1>
-    <a href="/posts/new" class="rounded-md bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700">New Post</a>
-  </div>
+  <Header />
+
+  <h2 class="text-3xl font-bold mb-8">My Blog</h2>
 
   <div class="space-y-8">
     {#each data.posts as post}
