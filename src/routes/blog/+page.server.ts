@@ -10,11 +10,11 @@ export const load: PageServerLoad = async () => {
             title: post.title,
             slug: post.slug,
             author: user.username,
-            created_at: post.created_at,
+            created_at: post.createdAt,
         })
         .from(post)
-        .innerJoin(user, eq(post.author_id, user.id))
-        .orderBy(desc(post.created_at)); // Show newest posts first
+        .innerJoin(user, eq(post.authorId, user.id))
+        .orderBy(desc(post.createdAt)); // Show newest posts first
 
     return { posts };
 };

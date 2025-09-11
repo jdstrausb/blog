@@ -9,12 +9,12 @@ export const load: PageServerLoad = async ({ params }) => {
     const results = await db
         .select({
             title: post.title,
-            markdown_content: post.markdown_content,
+            markdown_content: post.markdownContent,
             author: user.username,
-            created_at: post.created_at,
+            created_at: post.createdAt,
         })
         .from(post)
-        .innerJoin(user, eq(post.author_id, user.id))
+        .innerJoin(user, eq(post.authorId, user.id))
         .where(eq(post.slug, params.slug));
 
     const blog_post = results.at(0);

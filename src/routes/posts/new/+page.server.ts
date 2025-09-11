@@ -22,9 +22,9 @@ export const actions: Actions = {
 
         const form_data = await request.formData();
         const title = form_data.get('title') as string;
-        const markdown_content = form_data.get('content') as string;
+        const markdownContent = form_data.get('content') as string;
 
-        if (!title || !markdown_content) {
+        if (!title || !markdownContent) {
             return fail(400, { message: 'Title and content are required.' });
         }
 
@@ -39,9 +39,9 @@ export const actions: Actions = {
             await db.insert(table.post).values({
                 title,
                 slug: `${slug}-${Date.now()}`, // Ensure uniqueness by appending timestamp
-                markdown_content,
-                author_id: locals.user.id,
-                created_at: new Date()
+                markdownContent,
+                authorId: locals.user.id,
+                createdAt: new Date()
             });
         } catch (e) {
             console.error('Database error while creating post:', e);
