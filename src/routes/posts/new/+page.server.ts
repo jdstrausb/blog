@@ -48,8 +48,8 @@ export const actions: Actions = {
             return fail(500, { message: 'An error occurred while creating the post.' });
         }
 
-        // Redirect to the blog index or the new post's page after creation
-        return redirect(302, '/blog');
+        // Redirect to the blog index after creation
+        return redirect(302, '/');
     }
 };
 

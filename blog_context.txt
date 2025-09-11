@@ -1,49 +1,14 @@
-Directory Structure (from 'tree -aL 3 -I node_modules|blog_context.txt|bun.lockb'):
+Directory Structure (from 'tree -aL 3 -I node_modules|blog_context.txt|bun.lockb|.svelte-kit|.git|.prettierrc|.prettierignore'):
 ```
 .
 ├── .env
 ├── .env.example
-├── .git
-│   ├── HEAD
-│   ├── config
-│   ├── description
-│   ├── hooks
-│   │   ├── applypatch-msg.sample
-│   │   ├── commit-msg.sample
-│   │   ├── fsmonitor-watchman.sample
-│   │   ├── post-update.sample
-│   │   ├── pre-applypatch.sample
-│   │   ├── pre-commit.sample
-│   │   ├── pre-merge-commit.sample
-│   │   ├── pre-push.sample
-│   │   ├── pre-rebase.sample
-│   │   ├── pre-receive.sample
-│   │   ├── prepare-commit-msg.sample
-│   │   ├── push-to-checkout.sample
-│   │   ├── sendemail-validate.sample
-│   │   └── update.sample
-│   ├── info
-│   │   └── exclude
-│   ├── objects
-│   │   ├── info
-│   │   └── pack
-│   └── refs
-│       ├── heads
-│       └── tags
 ├── .gitignore
 ├── .npmrc
-├── .prettierignore
-├── .prettierrc
-├── .svelte-kit
-│   ├── ambient.d.ts
-│   ├── non-ambient.d.ts
-│   ├── tsconfig.json
-│   └── types
-│       ├── route_meta_data.json
-│       └── src
 ├── README.md
 ├── drizzle.config.ts
 ├── eslint.config.js
+├── local.db
 ├── package.json
 ├── src
 │   ├── app.css
@@ -56,15 +21,18 @@ Directory Structure (from 'tree -aL 3 -I node_modules|blog_context.txt|bun.lockb
 │   │   └── server
 │   └── routes
 │       ├── +layout.svelte
+│       ├── +page.server.ts
 │       ├── +page.svelte
-│       └── demo
+│       ├── [slug]
+│       ├── demo
+│       └── posts
 ├── static
 │   └── robots.txt
 ├── svelte.config.js
 ├── tsconfig.json
 └── vite.config.ts
 
-20 directories, 43 files
+10 directories, 21 files
 ```
 
 
@@ -111,40 +79,6 @@ vite.config.ts.timestamp-*
 .npmrc:
 ```
 engine-strict=true
-```
-
-.prettierignore:
-```
-# Package Managers
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-bun.lock
-bun.lockb
-
-# Miscellaneous
-/static/
-/drizzle/
-```
-
-.prettierrc:
-```
-{
-	"useTabs": true,
-	"singleQuote": true,
-	"trailingComma": "none",
-	"printWidth": 100,
-	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss"],
-	"overrides": [
-		{
-			"files": "*.svelte",
-			"options": {
-				"parser": "svelte"
-			}
-		}
-	],
-	"tailwindStylesheet": "./src/app.css"
-}
 ```
 
 README.md:
@@ -276,11 +210,12 @@ package.json:
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"@sveltejs/adapter-node": "^5.2.12",
-		"@sveltejs/kit": "^2.22.0",
+		"@sveltejs/kit": "^2.27.0",
 		"@sveltejs/vite-plugin-svelte": "^6.0.0",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
 		"@tailwindcss/vite": "^4.0.0",
+		"@types/marked": "^6.0.0",
 		"@types/node": "^22",
 		"drizzle-kit": "^0.30.2",
 		"drizzle-orm": "^0.40.0",
@@ -300,7 +235,10 @@ package.json:
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"@node-rs/argon2": "^2.0.2"
+		"@lucia-auth/adapter-drizzle": "^1.1.0",
+		"@node-rs/argon2": "^2.0.2",
+		"lucia": "^3.2.2",
+		"marked": "^16.2.1"
 	}
 }
 ```
@@ -316,7 +254,17 @@ const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
 	preprocess: [vitePreprocess(), mdsvex()],
-	kit: { adapter: adapter() },
+	kit: {
+    adapter: adapter(),
+    experimental: {
+      remoteFunctions: true
+    }
+  },
+  compilerOptions: {
+    experimental: {
+      async: true
+    }
+  },
 	extensions: ['.svelte', '.svx']
 };
 
@@ -364,1573 +312,6 @@ User-agent: *
 Disallow:
 ```
 
-.svelte-kit/ambient.d.ts:
-```
-// this file is generated — do not edit it
-
-
-/// <reference types="@sveltejs/kit" />
-
-/**
- * Environment variables [loaded by Vite](https://vitejs.dev/guide/env-and-mode.html#env-files) from `.env` files and `process.env`. Like [`$env/dynamic/private`](https://svelte.dev/docs/kit/$env-dynamic-private), this module cannot be imported into client-side code. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) _and do_ start with [`config.kit.env.privatePrefix`](https://svelte.dev/docs/kit/configuration#env) (if configured).
- * 
- * _Unlike_ [`$env/dynamic/private`](https://svelte.dev/docs/kit/$env-dynamic-private), the values exported from this module are statically injected into your bundle at build time, enabling optimisations like dead code elimination.
- * 
- * ```ts
- * import { API_KEY } from '$env/static/private';
- * ```
- * 
- * Note that all environment variables referenced in your code should be declared (for example in an `.env` file), even if they don't have a value until the app is deployed:
- * 
- * ```
- * MY_FEATURE_FLAG=""
- * ```
- * 
- * You can override `.env` values from the command line like so:
- * 
- * ```sh
- * MY_FEATURE_FLAG="enabled" npm run dev
- * ```
- */
-declare module '$env/static/private' {
-	export const DATABASE_URL: string;
-	export const TERM_PROGRAM: string;
-	export const NODE: string;
-	export const INIT_CWD: string;
-	export const _P9K_TTY: string;
-	export const ASDF_INSTALL_TYPE: string;
-	export const TERM: string;
-	export const SHELL: string;
-	export const ASDF_DIR: string;
-	export const TMPDIR: string;
-	export const HOMEBREW_REPOSITORY: string;
-	export const TERM_PROGRAM_VERSION: string;
-	export const TERM_SESSION_ID: string;
-	export const npm_config_local_prefix: string;
-	export const ZSH: string;
-	export const ASDF_INSTALL_PATH: string;
-	export const USER: string;
-	export const COMMAND_MODE: string;
-	export const ASDF_INSTALL_VERSION: string;
-	export const SSH_AUTH_SOCK: string;
-	export const __CF_USER_TEXT_ENCODING: string;
-	export const TERM_FEATURES: string;
-	export const npm_execpath: string;
-	export const BUN_WHICH_IGNORE_CWD: string;
-	export const FZF_DEFAULT_OPTS: string;
-	export const VIRTUAL_ENV: string;
-	export const PAGER: string;
-	export const LSCOLORS: string;
-	export const PATH: string;
-	export const TERMINFO_DIRS: string;
-	export const npm_package_json: string;
-	export const LaunchInstanceID: string;
-	export const _: string;
-	export const __CFBundleIdentifier: string;
-	export const PWD: string;
-	export const npm_command: string;
-	export const P9K_SSH: string;
-	export const npm_lifecycle_event: string;
-	export const npm_package_name: string;
-	export const P9K_TTY: string;
-	export const LANG: string;
-	export const ITERM_PROFILE: string;
-	export const XPC_FLAGS: string;
-	export const npm_package_version: string;
-	export const XPC_SERVICE_NAME: string;
-	export const COLORFGBG: string;
-	export const SHLVL: string;
-	export const BUN_INTERNAL_BUNX_INSTALL: string;
-	export const HOME: string;
-	export const PYENV_SHELL: string;
-	export const SOURCES_ENV: string;
-	export const NOTES_DIR: string;
-	export const LC_TERMINAL_VERSION: string;
-	export const HOMEBREW_PREFIX: string;
-	export const ITERM_SESSION_ID: string;
-	export const LOGNAME: string;
-	export const LESS: string;
-	export const npm_lifecycle_script: string;
-	export const LC_CTYPE: string;
-	export const FZF_DEFAULT_COMMAND: string;
-	export const BUN_INSTALL: string;
-	export const npm_config_user_agent: string;
-	export const INFOPATH: string;
-	export const HOMEBREW_CELLAR: string;
-	export const LC_TERMINAL: string;
-	export const SECURITYSESSIONID: string;
-	export const VIRTUAL_ENV_PROMPT: string;
-	export const npm_node_execpath: string;
-	export const COLORTERM: string;
-}
-
-/**
- * Similar to [`$env/static/private`](https://svelte.dev/docs/kit/$env-static-private), except that it only includes environment variables that begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) (which defaults to `PUBLIC_`), and can therefore safely be exposed to client-side code.
- * 
- * Values are replaced statically at build time.
- * 
- * ```ts
- * import { PUBLIC_BASE_URL } from '$env/static/public';
- * ```
- */
-declare module '$env/static/public' {
-	
-}
-
-/**
- * This module provides access to runtime environment variables, as defined by the platform you're running on. For example if you're using [`adapter-node`](https://github.com/sveltejs/kit/tree/main/packages/adapter-node) (or running [`vite preview`](https://svelte.dev/docs/kit/cli)), this is equivalent to `process.env`. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) _and do_ start with [`config.kit.env.privatePrefix`](https://svelte.dev/docs/kit/configuration#env) (if configured).
- * 
- * This module cannot be imported into client-side code.
- * 
- * ```ts
- * import { env } from '$env/dynamic/private';
- * console.log(env.DEPLOYMENT_SPECIFIC_VARIABLE);
- * ```
- * 
- * > [!NOTE] In `dev`, `$env/dynamic` always includes environment variables from `.env`. In `prod`, this behavior will depend on your adapter.
- */
-declare module '$env/dynamic/private' {
-	export const env: {
-		DATABASE_URL: string;
-		TERM_PROGRAM: string;
-		NODE: string;
-		INIT_CWD: string;
-		_P9K_TTY: string;
-		ASDF_INSTALL_TYPE: string;
-		TERM: string;
-		SHELL: string;
-		ASDF_DIR: string;
-		TMPDIR: string;
-		HOMEBREW_REPOSITORY: string;
-		TERM_PROGRAM_VERSION: string;
-		TERM_SESSION_ID: string;
-		npm_config_local_prefix: string;
-		ZSH: string;
-		ASDF_INSTALL_PATH: string;
-		USER: string;
-		COMMAND_MODE: string;
-		ASDF_INSTALL_VERSION: string;
-		SSH_AUTH_SOCK: string;
-		__CF_USER_TEXT_ENCODING: string;
-		TERM_FEATURES: string;
-		npm_execpath: string;
-		BUN_WHICH_IGNORE_CWD: string;
-		FZF_DEFAULT_OPTS: string;
-		VIRTUAL_ENV: string;
-		PAGER: string;
-		LSCOLORS: string;
-		PATH: string;
-		TERMINFO_DIRS: string;
-		npm_package_json: string;
-		LaunchInstanceID: string;
-		_: string;
-		__CFBundleIdentifier: string;
-		PWD: string;
-		npm_command: string;
-		P9K_SSH: string;
-		npm_lifecycle_event: string;
-		npm_package_name: string;
-		P9K_TTY: string;
-		LANG: string;
-		ITERM_PROFILE: string;
-		XPC_FLAGS: string;
-		npm_package_version: string;
-		XPC_SERVICE_NAME: string;
-		COLORFGBG: string;
-		SHLVL: string;
-		BUN_INTERNAL_BUNX_INSTALL: string;
-		HOME: string;
-		PYENV_SHELL: string;
-		SOURCES_ENV: string;
-		NOTES_DIR: string;
-		LC_TERMINAL_VERSION: string;
-		HOMEBREW_PREFIX: string;
-		ITERM_SESSION_ID: string;
-		LOGNAME: string;
-		LESS: string;
-		npm_lifecycle_script: string;
-		LC_CTYPE: string;
-		FZF_DEFAULT_COMMAND: string;
-		BUN_INSTALL: string;
-		npm_config_user_agent: string;
-		INFOPATH: string;
-		HOMEBREW_CELLAR: string;
-		LC_TERMINAL: string;
-		SECURITYSESSIONID: string;
-		VIRTUAL_ENV_PROMPT: string;
-		npm_node_execpath: string;
-		COLORTERM: string;
-		[key: `PUBLIC_${string}`]: undefined;
-		[key: `${string}`]: string | undefined;
-	}
-}
-
-/**
- * Similar to [`$env/dynamic/private`](https://svelte.dev/docs/kit/$env-dynamic-private), but only includes variables that begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) (which defaults to `PUBLIC_`), and can therefore safely be exposed to client-side code.
- * 
- * Note that public dynamic environment variables must all be sent from the server to the client, causing larger network requests — when possible, use `$env/static/public` instead.
- * 
- * ```ts
- * import { env } from '$env/dynamic/public';
- * console.log(env.PUBLIC_DEPLOYMENT_SPECIFIC_VARIABLE);
- * ```
- */
-declare module '$env/dynamic/public' {
-	export const env: {
-		[key: `PUBLIC_${string}`]: string | undefined;
-	}
-}
-```
-
-.svelte-kit/non-ambient.d.ts:
-```
-// this file is generated — do not edit it
-
-
-declare module "svelte/elements" {
-	export interface HTMLAttributes<T> {
-		'data-sveltekit-keepfocus'?: true | '' | 'off' | undefined | null;
-		'data-sveltekit-noscroll'?: true | '' | 'off' | undefined | null;
-		'data-sveltekit-preload-code'?:
-			| true
-			| ''
-			| 'eager'
-			| 'viewport'
-			| 'hover'
-			| 'tap'
-			| 'off'
-			| undefined
-			| null;
-		'data-sveltekit-preload-data'?: true | '' | 'hover' | 'tap' | 'off' | undefined | null;
-		'data-sveltekit-reload'?: true | '' | 'off' | undefined | null;
-		'data-sveltekit-replacestate'?: true | '' | 'off' | undefined | null;
-	}
-}
-
-export {};
-
-
-declare module "$app/types" {
-	export interface AppTypes {
-		RouteId(): "/" | "/demo" | "/demo/lucia" | "/demo/lucia/login";
-		RouteParams(): {
-			
-		};
-		LayoutParams(): {
-			"/": Record<string, never>;
-			"/demo": Record<string, never>;
-			"/demo/lucia": Record<string, never>;
-			"/demo/lucia/login": Record<string, never>
-		};
-		Pathname(): "/" | "/demo" | "/demo/" | "/demo/lucia" | "/demo/lucia/" | "/demo/lucia/login" | "/demo/lucia/login/";
-		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
-		Asset(): "/robots.txt" | string & {};
-	}
-}
-```
-
-.svelte-kit/tsconfig.json:
-```
-{
-	"compilerOptions": {
-		"paths": {
-			"$lib": [
-				"../src/lib"
-			],
-			"$lib/*": [
-				"../src/lib/*"
-			],
-			"$app/types": [
-				"./types/index.d.ts"
-			]
-		},
-		"rootDirs": [
-			"..",
-			"./types"
-		],
-		"verbatimModuleSyntax": true,
-		"isolatedModules": true,
-		"lib": [
-			"esnext",
-			"DOM",
-			"DOM.Iterable"
-		],
-		"moduleResolution": "bundler",
-		"module": "esnext",
-		"noEmit": true,
-		"target": "esnext"
-	},
-	"include": [
-		"ambient.d.ts",
-		"non-ambient.d.ts",
-		"./types/**/$types.d.ts",
-		"../vite.config.js",
-		"../vite.config.ts",
-		"../src/**/*.js",
-		"../src/**/*.ts",
-		"../src/**/*.svelte",
-		"../tests/**/*.js",
-		"../tests/**/*.ts",
-		"../tests/**/*.svelte"
-	],
-	"exclude": [
-		"../node_modules/**",
-		"../src/service-worker.js",
-		"../src/service-worker/**/*.js",
-		"../src/service-worker.ts",
-		"../src/service-worker/**/*.ts",
-		"../src/service-worker.d.ts",
-		"../src/service-worker/**/*.d.ts"
-	]
-}
-```
-
-.svelte-kit/types/route_meta_data.json:
-```
-{
-	"/": [],
-	"/demo": [],
-	"/demo/lucia": [
-		"src/routes/demo/lucia/+page.server.ts"
-	],
-	"/demo/lucia/login": [
-		"src/routes/demo/lucia/login/+page.server.ts"
-	]
-}
-```
-
-.svelte-kit/types/src/routes/$types.d.ts:
-```
-import type * as Kit from '@sveltejs/kit';
-
-type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
-// @ts-ignore
-type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
-type RouteParams = {  };
-type RouteId = '/';
-type MaybeWithVoid<T> = {} extends T ? T | void : T;
-export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
-type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
-type EnsureDefined<T> = T extends null | undefined ? {} : T;
-type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
-export type Snapshot<T = any> = Kit.Snapshot<T>;
-type PageParentData = EnsureDefined<LayoutData>;
-type LayoutRouteId = RouteId | "/" | "/demo" | "/demo/lucia" | "/demo/lucia/login" | null
-type LayoutParams = RouteParams & {  }
-type LayoutParentData = EnsureDefined<{}>;
-
-export type PageServerData = null;
-export type PageData = Expand<PageParentData>;
-export type PageProps = { params: RouteParams; data: PageData }
-export type LayoutServerData = null;
-export type LayoutData = Expand<LayoutParentData>;
-export type LayoutProps = { params: LayoutParams; data: LayoutData; children: import("svelte").Snippet }
-```
-
-.svelte-kit/types/src/routes/demo/$types.d.ts:
-```
-import type * as Kit from '@sveltejs/kit';
-
-type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
-// @ts-ignore
-type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
-type RouteParams = {  };
-type RouteId = '/demo';
-type MaybeWithVoid<T> = {} extends T ? T | void : T;
-export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
-type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
-type EnsureDefined<T> = T extends null | undefined ? {} : T;
-type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
-export type Snapshot<T = any> = Kit.Snapshot<T>;
-type PageParentData = EnsureDefined<import('../$types.js').LayoutData>;
-
-export type PageServerData = null;
-export type PageData = Expand<PageParentData>;
-export type PageProps = { params: RouteParams; data: PageData }
-```
-
-.svelte-kit/types/src/routes/demo/lucia/$types.d.ts:
-```
-import type * as Kit from '@sveltejs/kit';
-
-type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
-// @ts-ignore
-type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
-type RouteParams = {  };
-type RouteId = '/demo/lucia';
-type MaybeWithVoid<T> = {} extends T ? T | void : T;
-export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
-type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
-type EnsureDefined<T> = T extends null | undefined ? {} : T;
-type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
-export type Snapshot<T = any> = Kit.Snapshot<T>;
-type PageServerParentData = EnsureDefined<import('../../$types.js').LayoutServerData>;
-type PageParentData = EnsureDefined<import('../../$types.js').LayoutData>;
-
-export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
-export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
-type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;
-type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];
-type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;
-type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];
-type ActionsExport = typeof import('./proxy+page.server.js').actions
-export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>
-export type ActionData = Expand<Kit.AwaitedActions<ActionsExport>> | null;
-export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
-export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
-export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
-export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
-export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
-export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
-```
-
-.svelte-kit/types/src/routes/demo/lucia/proxy+page.server.ts:
-```
-// @ts-nocheck
-import * as auth from '$lib/server/auth';
-import { fail, redirect } from '@sveltejs/kit';
-import { getRequestEvent } from '$app/server';
-import type { Actions, PageServerLoad } from './$types';
-
-export const load = async () => {
-	const user = requireLogin()
-	return { user };
-};
-
-export const actions = {
-	logout: async (event: import('./$types').RequestEvent) => {
-		if (!event.locals.session) {
-			return fail(401);
-		}
-		await auth.invalidateSession(event.locals.session.id);
-		auth.deleteSessionTokenCookie(event);
-
-		return redirect(302, '/demo/lucia/login');
-	},
-};
-
-function requireLogin() {
-  const { locals } = getRequestEvent();
-
-  if (!locals.user) {
-    return redirect(302, "/demo/lucia/login");
-  }
-
-  return locals.user;
-}
-;null as any as PageServerLoad;;null as any as Actions;
-```
-
-.svelte-kit/types/src/routes/demo/lucia/login/$types.d.ts:
-```
-import type * as Kit from '@sveltejs/kit';
-
-type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
-// @ts-ignore
-type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
-type RouteParams = {  };
-type RouteId = '/demo/lucia/login';
-type MaybeWithVoid<T> = {} extends T ? T | void : T;
-export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
-type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
-type EnsureDefined<T> = T extends null | undefined ? {} : T;
-type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
-export type Snapshot<T = any> = Kit.Snapshot<T>;
-type PageServerParentData = EnsureDefined<import('../../../$types.js').LayoutServerData>;
-type PageParentData = EnsureDefined<import('../../../$types.js').LayoutData>;
-
-export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
-export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
-type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;
-type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];
-type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;
-type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];
-type ActionsExport = typeof import('./proxy+page.server.js').actions
-export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>
-export type ActionData = Expand<Kit.AwaitedActions<ActionsExport>> | null;
-export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
-export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
-export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
-export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
-export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
-export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
-```
-
-.svelte-kit/types/src/routes/demo/lucia/login/proxy+page.server.ts:
-```
-// @ts-nocheck
-import { hash, verify } from '@node-rs/argon2';
-import { encodeBase32LowerCase } from '@oslojs/encoding';
-import { fail, redirect } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
-import * as auth from '$lib/server/auth';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
-import type { Actions, PageServerLoad } from './$types';
-
-export const load = async (event: Parameters<PageServerLoad>[0]) => {
-	if (event.locals.user) {
-		return redirect(302, '/demo/lucia');
-	}
-	return {};
-};
-
-export const actions = {
-	login: async (event: import('./$types').RequestEvent) => {
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
-
-		if (!validateUsername(username)) {
-			return fail(400, { message: 'Invalid username (min 3, max 31 characters, alphanumeric only)' });
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password (min 6, max 255 characters)' });
-		}
-
-		const results = await db
-			.select()
-			.from(table.user)
-			.where(eq(table.user.username, username));
-
-		const existingUser = results.at(0);
-		if (!existingUser) {
-			return fail(400, { message: 'Incorrect username or password' });
-		}
-
-		const validPassword = await verify(existingUser.passwordHash, password, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1,
-		});
-		if (!validPassword) {
-			return fail(400, { message: 'Incorrect username or password' });
-		}
-
-		const sessionToken = auth.generateSessionToken();
-		const session = await auth.createSession(sessionToken, existingUser.id);
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-
-		return redirect(302, '/demo/lucia');
-	},
-	register: async (event: import('./$types').RequestEvent) => {
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
-
-		if (!validateUsername(username)) {
-			return fail(400, { message: 'Invalid username' });
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password' });
-		}
-
-		const userId = generateUserId();
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1,
-		});
-
-		try {
-			await db.insert(table.user).values({ id: userId, username, passwordHash });
-
-			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, userId);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-		} catch {
-			return fail(500, { message: 'An error has occurred' });
-		}
-		return redirect(302, '/demo/lucia');
-	},
-};
-
-function generateUserId() {
-	// ID with 120 bits of entropy, or about the same as UUID v4.
-	const bytes = crypto.getRandomValues(new Uint8Array(15));
-	const id = encodeBase32LowerCase(bytes);
-	return id;
-}
-
-function validateUsername(username: unknown): username is string {
-	return (
-		typeof username === 'string' &&
-		username.length >= 3 &&
-		username.length <= 31 &&
-		/^[a-z0-9_-]+$/.test(username)
-	);
-}
-
-function validatePassword(password: unknown): password is string {
-	return (
-		typeof password === 'string' &&
-		password.length >= 6 &&
-		password.length <= 255
-	);
-}
-;null as any as Actions;
-```
-
-.git/HEAD:
-```
-ref: refs/heads/master
-```
-
-.git/config:
-```
-[core]
-	repositoryformatversion = 0
-	filemode = true
-	bare = false
-	logallrefupdates = true
-	ignorecase = true
-	precomposeunicode = true
-[advice]
-	defaultBranchName = false
-```
-
-.git/description:
-```
-Unnamed repository; edit this file 'description' to name the repository.
-```
-
-.git/info/exclude:
-```
-# git ls-files --others --exclude-from=.git/info/exclude
-# Lines that start with '#' are comments.
-# For a project mostly in C, the following would be a good set of
-# exclude patterns (uncomment them if you want to use them):
-# *.[oa]
-# *~
-```
-
-.git/hooks/applypatch-msg.sample:
-```
-#!/bin/sh
-#
-# An example hook script to check the commit log message taken by
-# applypatch from an e-mail message.
-#
-# The hook should exit with non-zero status after issuing an
-# appropriate message if it wants to stop the commit.  The hook is
-# allowed to edit the commit message file.
-#
-# To enable this hook, rename this file to "applypatch-msg".
-
-. git-sh-setup
-commitmsg="$(git rev-parse --git-path hooks/commit-msg)"
-test -x "$commitmsg" && exec "$commitmsg" ${1+"$@"}
-:
-```
-
-.git/hooks/commit-msg.sample:
-```
-#!/bin/sh
-#
-# An example hook script to check the commit log message.
-# Called by "git commit" with one argument, the name of the file
-# that has the commit message.  The hook should exit with non-zero
-# status after issuing an appropriate message if it wants to stop the
-# commit.  The hook is allowed to edit the commit message file.
-#
-# To enable this hook, rename this file to "commit-msg".
-
-# Uncomment the below to add a Signed-off-by line to the message.
-# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
-# hook is more suited to it.
-#
-# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
-
-# This example catches duplicate Signed-off-by lines.
-
-test "" = "$(grep '^Signed-off-by: ' "$1" |
-	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
-	echo >&2 Duplicate Signed-off-by lines.
-	exit 1
-}
-```
-
-.git/hooks/fsmonitor-watchman.sample:
-```
-#!/usr/bin/perl
-
-use strict;
-use warnings;
-use IPC::Open2;
-
-# An example hook script to integrate Watchman
-# (https://facebook.github.io/watchman/) with git to speed up detecting
-# new and modified files.
-#
-# The hook is passed a version (currently 2) and last update token
-# formatted as a string and outputs to stdout a new update token and
-# all files that have been modified since the update token. Paths must
-# be relative to the root of the working tree and separated by a single NUL.
-#
-# To enable this hook, rename this file to "query-watchman" and set
-# 'git config core.fsmonitor .git/hooks/query-watchman'
-#
-my ($version, $last_update_token) = @ARGV;
-
-# Uncomment for debugging
-# print STDERR "$0 $version $last_update_token\n";
-
-# Check the hook interface version
-if ($version ne 2) {
-	die "Unsupported query-fsmonitor hook version '$version'.\n" .
-	    "Falling back to scanning...\n";
-}
-
-my $git_work_tree = get_working_dir();
-
-my $retry = 1;
-
-my $json_pkg;
-eval {
-	require JSON::XS;
-	$json_pkg = "JSON::XS";
-	1;
-} or do {
-	require JSON::PP;
-	$json_pkg = "JSON::PP";
-};
-
-launch_watchman();
-
-sub launch_watchman {
-	my $o = watchman_query();
-	if (is_work_tree_watched($o)) {
-		output_result($o->{clock}, @{$o->{files}});
-	}
-}
-
-sub output_result {
-	my ($clockid, @files) = @_;
-
-	# Uncomment for debugging watchman output
-	# open (my $fh, ">", ".git/watchman-output.out");
-	# binmode $fh, ":utf8";
-	# print $fh "$clockid\n@files\n";
-	# close $fh;
-
-	binmode STDOUT, ":utf8";
-	print $clockid;
-	print "\0";
-	local $, = "\0";
-	print @files;
-}
-
-sub watchman_clock {
-	my $response = qx/watchman clock "$git_work_tree"/;
-	die "Failed to get clock id on '$git_work_tree'.\n" .
-		"Falling back to scanning...\n" if $? != 0;
-
-	return $json_pkg->new->utf8->decode($response);
-}
-
-sub watchman_query {
-	my $pid = open2(\*CHLD_OUT, \*CHLD_IN, 'watchman -j --no-pretty')
-	or die "open2() failed: $!\n" .
-	"Falling back to scanning...\n";
-
-	# In the query expression below we're asking for names of files that
-	# changed since $last_update_token but not from the .git folder.
-	#
-	# To accomplish this, we're using the "since" generator to use the
-	# recency index to select candidate nodes and "fields" to limit the
-	# output to file names only. Then we're using the "expression" term to
-	# further constrain the results.
-	my $last_update_line = "";
-	if (substr($last_update_token, 0, 1) eq "c") {
-		$last_update_token = "\"$last_update_token\"";
-		$last_update_line = qq[\n"since": $last_update_token,];
-	}
-	my $query = <<"	END";
-		["query", "$git_work_tree", {$last_update_line
-			"fields": ["name"],
-			"expression": ["not", ["dirname", ".git"]]
-		}]
-	END
-
-	# Uncomment for debugging the watchman query
-	# open (my $fh, ">", ".git/watchman-query.json");
-	# print $fh $query;
-	# close $fh;
-
-	print CHLD_IN $query;
-	close CHLD_IN;
-	my $response = do {local $/; <CHLD_OUT>};
-
-	# Uncomment for debugging the watch response
-	# open ($fh, ">", ".git/watchman-response.json");
-	# print $fh $response;
-	# close $fh;
-
-	die "Watchman: command returned no output.\n" .
-	"Falling back to scanning...\n" if $response eq "";
-	die "Watchman: command returned invalid output: $response\n" .
-	"Falling back to scanning...\n" unless $response =~ /^\{/;
-
-	return $json_pkg->new->utf8->decode($response);
-}
-
-sub is_work_tree_watched {
-	my ($output) = @_;
-	my $error = $output->{error};
-	if ($retry > 0 and $error and $error =~ m/unable to resolve root .* directory (.*) is not watched/) {
-		$retry--;
-		my $response = qx/watchman watch "$git_work_tree"/;
-		die "Failed to make watchman watch '$git_work_tree'.\n" .
-		    "Falling back to scanning...\n" if $? != 0;
-		$output = $json_pkg->new->utf8->decode($response);
-		$error = $output->{error};
-		die "Watchman: $error.\n" .
-		"Falling back to scanning...\n" if $error;
-
-		# Uncomment for debugging watchman output
-		# open (my $fh, ">", ".git/watchman-output.out");
-		# close $fh;
-
-		# Watchman will always return all files on the first query so
-		# return the fast "everything is dirty" flag to git and do the
-		# Watchman query just to get it over with now so we won't pay
-		# the cost in git to look up each individual file.
-		my $o = watchman_clock();
-		$error = $output->{error};
-
-		die "Watchman: $error.\n" .
-		"Falling back to scanning...\n" if $error;
-
-		output_result($o->{clock}, ("/"));
-		$last_update_token = $o->{clock};
-
-		eval { launch_watchman() };
-		return 0;
-	}
-
-	die "Watchman: $error.\n" .
-	"Falling back to scanning...\n" if $error;
-
-	return 1;
-}
-
-sub get_working_dir {
-	my $working_dir;
-	if ($^O =~ 'msys' || $^O =~ 'cygwin') {
-		$working_dir = Win32::GetCwd();
-		$working_dir =~ tr/\\/\//;
-	} else {
-		require Cwd;
-		$working_dir = Cwd::cwd();
-	}
-
-	return $working_dir;
-}
-```
-
-.git/hooks/post-update.sample:
-```
-#!/bin/sh
-#
-# An example hook script to prepare a packed repository for use over
-# dumb transports.
-#
-# To enable this hook, rename this file to "post-update".
-
-exec git update-server-info
-```
-
-.git/hooks/pre-applypatch.sample:
-```
-#!/bin/sh
-#
-# An example hook script to verify what is about to be committed
-# by applypatch from an e-mail message.
-#
-# The hook should exit with non-zero status after issuing an
-# appropriate message if it wants to stop the commit.
-#
-# To enable this hook, rename this file to "pre-applypatch".
-
-. git-sh-setup
-precommit="$(git rev-parse --git-path hooks/pre-commit)"
-test -x "$precommit" && exec "$precommit" ${1+"$@"}
-:
-```
-
-.git/hooks/pre-commit.sample:
-```
-#!/bin/sh
-#
-# An example hook script to verify what is about to be committed.
-# Called by "git commit" with no arguments.  The hook should
-# exit with non-zero status after issuing an appropriate message if
-# it wants to stop the commit.
-#
-# To enable this hook, rename this file to "pre-commit".
-
-if git rev-parse --verify HEAD >/dev/null 2>&1
-then
-	against=HEAD
-else
-	# Initial commit: diff against an empty tree object
-	against=$(git hash-object -t tree /dev/null)
-fi
-
-# If you want to allow non-ASCII filenames set this variable to true.
-allownonascii=$(git config --type=bool hooks.allownonascii)
-
-# Redirect output to stderr.
-exec 1>&2
-
-# Cross platform projects tend to avoid non-ASCII filenames; prevent
-# them from being added to the repository. We exploit the fact that the
-# printable range starts at the space character and ends with tilde.
-if [ "$allownonascii" != "true" ] &&
-	# Note that the use of brackets around a tr range is ok here, (it's
-	# even required, for portability to Solaris 10's /usr/bin/tr), since
-	# the square bracket bytes happen to fall in the designated range.
-	test $(git diff-index --cached --name-only --diff-filter=A -z $against |
-	  LC_ALL=C tr -d '[ -~]\0' | wc -c) != 0
-then
-	cat <<\EOF
-Error: Attempt to add a non-ASCII file name.
-
-This can cause problems if you want to work with people on other platforms.
-
-To be portable it is advisable to rename the file.
-
-If you know what you are doing you can disable this check using:
-
-  git config hooks.allownonascii true
-EOF
-	exit 1
-fi
-
-# If there are whitespace errors, print the offending file names and fail.
-exec git diff-index --check --cached $against --
-```
-
-.git/hooks/pre-merge-commit.sample:
-```
-#!/bin/sh
-#
-# An example hook script to verify what is about to be committed.
-# Called by "git merge" with no arguments.  The hook should
-# exit with non-zero status after issuing an appropriate message to
-# stderr if it wants to stop the merge commit.
-#
-# To enable this hook, rename this file to "pre-merge-commit".
-
-. git-sh-setup
-test -x "$GIT_DIR/hooks/pre-commit" &&
-        exec "$GIT_DIR/hooks/pre-commit"
-:
-```
-
-.git/hooks/pre-push.sample:
-```
-#!/bin/sh
-
-# An example hook script to verify what is about to be pushed.  Called by "git
-# push" after it has checked the remote status, but before anything has been
-# pushed.  If this script exits with a non-zero status nothing will be pushed.
-#
-# This hook is called with the following parameters:
-#
-# $1 -- Name of the remote to which the push is being done
-# $2 -- URL to which the push is being done
-#
-# If pushing without using a named remote those arguments will be equal.
-#
-# Information about the commits which are being pushed is supplied as lines to
-# the standard input in the form:
-#
-#   <local ref> <local oid> <remote ref> <remote oid>
-#
-# This sample shows how to prevent push of commits where the log message starts
-# with "WIP" (work in progress).
-
-remote="$1"
-url="$2"
-
-zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
-
-while read local_ref local_oid remote_ref remote_oid
-do
-	if test "$local_oid" = "$zero"
-	then
-		# Handle delete
-		:
-	else
-		if test "$remote_oid" = "$zero"
-		then
-			# New branch, examine all commits
-			range="$local_oid"
-		else
-			# Update to existing branch, examine new commits
-			range="$remote_oid..$local_oid"
-		fi
-
-		# Check for WIP commit
-		commit=$(git rev-list -n 1 --grep '^WIP' "$range")
-		if test -n "$commit"
-		then
-			echo >&2 "Found WIP commit in $local_ref, not pushing"
-			exit 1
-		fi
-	fi
-done
-
-exit 0
-```
-
-.git/hooks/pre-rebase.sample:
-```
-#!/bin/sh
-#
-# Copyright (c) 2006, 2008 Junio C Hamano
-#
-# The "pre-rebase" hook is run just before "git rebase" starts doing
-# its job, and can prevent the command from running by exiting with
-# non-zero status.
-#
-# The hook is called with the following parameters:
-#
-# $1 -- the upstream the series was forked from.
-# $2 -- the branch being rebased (or empty when rebasing the current branch).
-#
-# This sample shows how to prevent topic branches that are already
-# merged to 'next' branch from getting rebased, because allowing it
-# would result in rebasing already published history.
-
-publish=next
-basebranch="$1"
-if test "$#" = 2
-then
-	topic="refs/heads/$2"
-else
-	topic=`git symbolic-ref HEAD` ||
-	exit 0 ;# we do not interrupt rebasing detached HEAD
-fi
-
-case "$topic" in
-refs/heads/??/*)
-	;;
-*)
-	exit 0 ;# we do not interrupt others.
-	;;
-esac
-
-# Now we are dealing with a topic branch being rebased
-# on top of master.  Is it OK to rebase it?
-
-# Does the topic really exist?
-git show-ref -q "$topic" || {
-	echo >&2 "No such branch $topic"
-	exit 1
-}
-
-# Is topic fully merged to master?
-not_in_master=`git rev-list --pretty=oneline ^master "$topic"`
-if test -z "$not_in_master"
-then
-	echo >&2 "$topic is fully merged to master; better remove it."
-	exit 1 ;# we could allow it, but there is no point.
-fi
-
-# Is topic ever merged to next?  If so you should not be rebasing it.
-only_next_1=`git rev-list ^master "^$topic" ${publish} | sort`
-only_next_2=`git rev-list ^master           ${publish} | sort`
-if test "$only_next_1" = "$only_next_2"
-then
-	not_in_topic=`git rev-list "^$topic" master`
-	if test -z "$not_in_topic"
-	then
-		echo >&2 "$topic is already up to date with master"
-		exit 1 ;# we could allow it, but there is no point.
-	else
-		exit 0
-	fi
-else
-	not_in_next=`git rev-list --pretty=oneline ^${publish} "$topic"`
-	/usr/bin/perl -e '
-		my $topic = $ARGV[0];
-		my $msg = "* $topic has commits already merged to public branch:\n";
-		my (%not_in_next) = map {
-			/^([0-9a-f]+) /;
-			($1 => 1);
-		} split(/\n/, $ARGV[1]);
-		for my $elem (map {
-				/^([0-9a-f]+) (.*)$/;
-				[$1 => $2];
-			} split(/\n/, $ARGV[2])) {
-			if (!exists $not_in_next{$elem->[0]}) {
-				if ($msg) {
-					print STDERR $msg;
-					undef $msg;
-				}
-				print STDERR " $elem->[1]\n";
-			}
-		}
-	' "$topic" "$not_in_next" "$not_in_master"
-	exit 1
-fi
-
-<<\DOC_END
-
-This sample hook safeguards topic branches that have been
-published from being rewound.
-
-The workflow assumed here is:
-
- * Once a topic branch forks from "master", "master" is never
-   merged into it again (either directly or indirectly).
-
- * Once a topic branch is fully cooked and merged into "master",
-   it is deleted.  If you need to build on top of it to correct
-   earlier mistakes, a new topic branch is created by forking at
-   the tip of the "master".  This is not strictly necessary, but
-   it makes it easier to keep your history simple.
-
- * Whenever you need to test or publish your changes to topic
-   branches, merge them into "next" branch.
-
-The script, being an example, hardcodes the publish branch name
-to be "next", but it is trivial to make it configurable via
-$GIT_DIR/config mechanism.
-
-With this workflow, you would want to know:
-
-(1) ... if a topic branch has ever been merged to "next".  Young
-    topic branches can have stupid mistakes you would rather
-    clean up before publishing, and things that have not been
-    merged into other branches can be easily rebased without
-    affecting other people.  But once it is published, you would
-    not want to rewind it.
-
-(2) ... if a topic branch has been fully merged to "master".
-    Then you can delete it.  More importantly, you should not
-    build on top of it -- other people may already want to
-    change things related to the topic as patches against your
-    "master", so if you need further changes, it is better to
-    fork the topic (perhaps with the same name) afresh from the
-    tip of "master".
-
-Let's look at this example:
-
-		   o---o---o---o---o---o---o---o---o---o "next"
-		  /       /           /           /
-		 /   a---a---b A     /           /
-		/   /               /           /
-	       /   /   c---c---c---c B         /
-	      /   /   /             \         /
-	     /   /   /   b---b C     \       /
-	    /   /   /   /             \     /
-    ---o---o---o---o---o---o---o---o---o---o---o "master"
-
-
-A, B and C are topic branches.
-
- * A has one fix since it was merged up to "next".
-
- * B has finished.  It has been fully merged up to "master" and "next",
-   and is ready to be deleted.
-
- * C has not merged to "next" at all.
-
-We would want to allow C to be rebased, refuse A, and encourage
-B to be deleted.
-
-To compute (1):
-
-	git rev-list ^master ^topic next
-	git rev-list ^master        next
-
-	if these match, topic has not merged in next at all.
-
-To compute (2):
-
-	git rev-list master..topic
-
-	if this is empty, it is fully merged to "master".
-
-DOC_END
-```
-
-.git/hooks/pre-receive.sample:
-```
-#!/bin/sh
-#
-# An example hook script to make use of push options.
-# The example simply echoes all push options that start with 'echoback='
-# and rejects all pushes when the "reject" push option is used.
-#
-# To enable this hook, rename this file to "pre-receive".
-
-if test -n "$GIT_PUSH_OPTION_COUNT"
-then
-	i=0
-	while test "$i" -lt "$GIT_PUSH_OPTION_COUNT"
-	do
-		eval "value=\$GIT_PUSH_OPTION_$i"
-		case "$value" in
-		echoback=*)
-			echo "echo from the pre-receive-hook: ${value#*=}" >&2
-			;;
-		reject)
-			exit 1
-		esac
-		i=$((i + 1))
-	done
-fi
-```
-
-.git/hooks/prepare-commit-msg.sample:
-```
-#!/bin/sh
-#
-# An example hook script to prepare the commit log message.
-# Called by "git commit" with the name of the file that has the
-# commit message, followed by the description of the commit
-# message's source.  The hook's purpose is to edit the commit
-# message file.  If the hook fails with a non-zero status,
-# the commit is aborted.
-#
-# To enable this hook, rename this file to "prepare-commit-msg".
-
-# This hook includes three examples. The first one removes the
-# "# Please enter the commit message..." help message.
-#
-# The second includes the output of "git diff --name-status -r"
-# into the message, just before the "git status" output.  It is
-# commented because it doesn't cope with --amend or with squashed
-# commits.
-#
-# The third example adds a Signed-off-by line to the message, that can
-# still be edited.  This is rarely a good idea.
-
-COMMIT_MSG_FILE=$1
-COMMIT_SOURCE=$2
-SHA1=$3
-
-/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' "$COMMIT_MSG_FILE"
-
-# case "$COMMIT_SOURCE,$SHA1" in
-#  ,|template,)
-#    /usr/bin/perl -i.bak -pe '
-#       print "\n" . `git diff --cached --name-status -r`
-# 	 if /^#/ && $first++ == 0' "$COMMIT_MSG_FILE" ;;
-#  *) ;;
-# esac
-
-# SOB=$(git var GIT_COMMITTER_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-# git interpret-trailers --in-place --trailer "$SOB" "$COMMIT_MSG_FILE"
-# if test -z "$COMMIT_SOURCE"
-# then
-#   /usr/bin/perl -i.bak -pe 'print "\n" if !$first_line++' "$COMMIT_MSG_FILE"
-# fi
-```
-
-.git/hooks/push-to-checkout.sample:
-```
-#!/bin/sh
-
-# An example hook script to update a checked-out tree on a git push.
-#
-# This hook is invoked by git-receive-pack(1) when it reacts to git
-# push and updates reference(s) in its repository, and when the push
-# tries to update the branch that is currently checked out and the
-# receive.denyCurrentBranch configuration variable is set to
-# updateInstead.
-#
-# By default, such a push is refused if the working tree and the index
-# of the remote repository has any difference from the currently
-# checked out commit; when both the working tree and the index match
-# the current commit, they are updated to match the newly pushed tip
-# of the branch. This hook is to be used to override the default
-# behaviour; however the code below reimplements the default behaviour
-# as a starting point for convenient modification.
-#
-# The hook receives the commit with which the tip of the current
-# branch is going to be updated:
-commit=$1
-
-# It can exit with a non-zero status to refuse the push (when it does
-# so, it must not modify the index or the working tree).
-die () {
-	echo >&2 "$*"
-	exit 1
-}
-
-# Or it can make any necessary changes to the working tree and to the
-# index to bring them to the desired state when the tip of the current
-# branch is updated to the new commit, and exit with a zero status.
-#
-# For example, the hook can simply run git read-tree -u -m HEAD "$1"
-# in order to emulate git fetch that is run in the reverse direction
-# with git push, as the two-tree form of git read-tree -u -m is
-# essentially the same as git switch or git checkout that switches
-# branches while keeping the local changes in the working tree that do
-# not interfere with the difference between the branches.
-
-# The below is a more-or-less exact translation to shell of the C code
-# for the default behaviour for git's push-to-checkout hook defined in
-# the push_to_deploy() function in builtin/receive-pack.c.
-#
-# Note that the hook will be executed from the repository directory,
-# not from the working tree, so if you want to perform operations on
-# the working tree, you will have to adapt your code accordingly, e.g.
-# by adding "cd .." or using relative paths.
-
-if ! git update-index -q --ignore-submodules --refresh
-then
-	die "Up-to-date check failed"
-fi
-
-if ! git diff-files --quiet --ignore-submodules --
-then
-	die "Working directory has unstaged changes"
-fi
-
-# This is a rough translation of:
-#
-#   head_has_history() ? "HEAD" : EMPTY_TREE_SHA1_HEX
-if git cat-file -e HEAD 2>/dev/null
-then
-	head=HEAD
-else
-	head=$(git hash-object -t tree --stdin </dev/null)
-fi
-
-if ! git diff-index --quiet --cached --ignore-submodules $head --
-then
-	die "Working directory has staged changes"
-fi
-
-if ! git read-tree -u -m "$commit"
-then
-	die "Could not update working tree to new HEAD"
-fi
-```
-
-.git/hooks/sendemail-validate.sample:
-```
-#!/bin/sh
-
-# An example hook script to validate a patch (and/or patch series) before
-# sending it via email.
-#
-# The hook should exit with non-zero status after issuing an appropriate
-# message if it wants to prevent the email(s) from being sent.
-#
-# To enable this hook, rename this file to "sendemail-validate".
-#
-# By default, it will only check that the patch(es) can be applied on top of
-# the default upstream branch without conflicts in a secondary worktree. After
-# validation (successful or not) of the last patch of a series, the worktree
-# will be deleted.
-#
-# The following config variables can be set to change the default remote and
-# remote ref that are used to apply the patches against:
-#
-#   sendemail.validateRemote (default: origin)
-#   sendemail.validateRemoteRef (default: HEAD)
-#
-# Replace the TODO placeholders with appropriate checks according to your
-# needs.
-
-validate_cover_letter () {
-	file="$1"
-	# TODO: Replace with appropriate checks (e.g. spell checking).
-	true
-}
-
-validate_patch () {
-	file="$1"
-	# Ensure that the patch applies without conflicts.
-	git am -3 "$file" || return
-	# TODO: Replace with appropriate checks for this patch
-	# (e.g. checkpatch.pl).
-	true
-}
-
-validate_series () {
-	# TODO: Replace with appropriate checks for the whole series
-	# (e.g. quick build, coding style checks, etc.).
-	true
-}
-
-# main -------------------------------------------------------------------------
-
-if test "$GIT_SENDEMAIL_FILE_COUNTER" = 1
-then
-	remote=$(git config --default origin --get sendemail.validateRemote) &&
-	ref=$(git config --default HEAD --get sendemail.validateRemoteRef) &&
-	worktree=$(mktemp --tmpdir -d sendemail-validate.XXXXXXX) &&
-	git worktree add -fd --checkout "$worktree" "refs/remotes/$remote/$ref" &&
-	git config --replace-all sendemail.validateWorktree "$worktree"
-else
-	worktree=$(git config --get sendemail.validateWorktree)
-fi || {
-	echo "sendemail-validate: error: failed to prepare worktree" >&2
-	exit 1
-}
-
-unset GIT_DIR GIT_WORK_TREE
-cd "$worktree" &&
-
-if grep -q "^diff --git " "$1"
-then
-	validate_patch "$1"
-else
-	validate_cover_letter "$1"
-fi &&
-
-if test "$GIT_SENDEMAIL_FILE_COUNTER" = "$GIT_SENDEMAIL_FILE_TOTAL"
-then
-	git config --unset-all sendemail.validateWorktree &&
-	trap 'git worktree remove -ff "$worktree"' EXIT &&
-	validate_series
-fi
-```
-
-.git/hooks/update.sample:
-```
-#!/bin/sh
-#
-# An example hook script to block unannotated tags from entering.
-# Called by "git receive-pack" with arguments: refname sha1-old sha1-new
-#
-# To enable this hook, rename this file to "update".
-#
-# Config
-# ------
-# hooks.allowunannotated
-#   This boolean sets whether unannotated tags will be allowed into the
-#   repository.  By default they won't be.
-# hooks.allowdeletetag
-#   This boolean sets whether deleting tags will be allowed in the
-#   repository.  By default they won't be.
-# hooks.allowmodifytag
-#   This boolean sets whether a tag may be modified after creation. By default
-#   it won't be.
-# hooks.allowdeletebranch
-#   This boolean sets whether deleting branches will be allowed in the
-#   repository.  By default they won't be.
-# hooks.denycreatebranch
-#   This boolean sets whether remotely creating branches will be denied
-#   in the repository.  By default this is allowed.
-#
-
-# --- Command line
-refname="$1"
-oldrev="$2"
-newrev="$3"
-
-# --- Safety check
-if [ -z "$GIT_DIR" ]; then
-	echo "Don't run this script from the command line." >&2
-	echo " (if you want, you could supply GIT_DIR then run" >&2
-	echo "  $0 <ref> <oldrev> <newrev>)" >&2
-	exit 1
-fi
-
-if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
-	echo "usage: $0 <ref> <oldrev> <newrev>" >&2
-	exit 1
-fi
-
-# --- Config
-allowunannotated=$(git config --type=bool hooks.allowunannotated)
-allowdeletebranch=$(git config --type=bool hooks.allowdeletebranch)
-denycreatebranch=$(git config --type=bool hooks.denycreatebranch)
-allowdeletetag=$(git config --type=bool hooks.allowdeletetag)
-allowmodifytag=$(git config --type=bool hooks.allowmodifytag)
-
-# check for no description
-projectdesc=$(sed -e '1q' "$GIT_DIR/description")
-case "$projectdesc" in
-"Unnamed repository"* | "")
-	echo "*** Project description file hasn't been set" >&2
-	exit 1
-	;;
-esac
-
-# --- Check types
-# if $newrev is 0000...0000, it's a commit to delete a ref.
-zero=$(git hash-object --stdin </dev/null | tr '[0-9a-f]' '0')
-if [ "$newrev" = "$zero" ]; then
-	newrev_type=delete
-else
-	newrev_type=$(git cat-file -t $newrev)
-fi
-
-case "$refname","$newrev_type" in
-	refs/tags/*,commit)
-		# un-annotated tag
-		short_refname=${refname##refs/tags/}
-		if [ "$allowunannotated" != "true" ]; then
-			echo "*** The un-annotated tag, $short_refname, is not allowed in this repository" >&2
-			echo "*** Use 'git tag [ -a | -s ]' for tags you want to propagate." >&2
-			exit 1
-		fi
-		;;
-	refs/tags/*,delete)
-		# delete tag
-		if [ "$allowdeletetag" != "true" ]; then
-			echo "*** Deleting a tag is not allowed in this repository" >&2
-			exit 1
-		fi
-		;;
-	refs/tags/*,tag)
-		# annotated tag
-		if [ "$allowmodifytag" != "true" ] && git rev-parse $refname > /dev/null 2>&1
-		then
-			echo "*** Tag '$refname' already exists." >&2
-			echo "*** Modifying a tag is not allowed in this repository." >&2
-			exit 1
-		fi
-		;;
-	refs/heads/*,commit)
-		# branch
-		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
-			echo "*** Creating a branch is not allowed in this repository" >&2
-			exit 1
-		fi
-		;;
-	refs/heads/*,delete)
-		# delete branch
-		if [ "$allowdeletebranch" != "true" ]; then
-			echo "*** Deleting a branch is not allowed in this repository" >&2
-			exit 1
-		fi
-		;;
-	refs/remotes/*,commit)
-		# tracking branch
-		;;
-	refs/remotes/*,delete)
-		# delete tracking branch
-		if [ "$allowdeletebranch" != "true" ]; then
-			echo "*** Deleting a tracking branch is not allowed in this repository" >&2
-			exit 1
-		fi
-		;;
-	*)
-		# Anything else (is there anything else?)
-		echo "*** Update hook: unknown type of update to ref $refname of type $newrev_type" >&2
-		exit 1
-		;;
-esac
-
-# --- Finished
-exit 0
-```
-
 src/app.css:
 ```
 @import 'tailwindcss';
@@ -1943,13 +324,13 @@ src/app.d.ts:
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
-	namespace App {
-		interface Locals {
-			user: import('$lib/server/auth').SessionValidationResult['user'];
-			session: import('$lib/server/auth').SessionValidationResult['session'];
-		}
-	} // interface Error {}
-	// interface Locals {}
+  namespace App {
+    interface Locals {
+      user: import('$lib/server/auth').SessionValidationResult['user'];
+      session: import('$lib/server/auth').SessionValidationResult['session'];
+    }
+  } // interface Error {}
+  // interface Locals {}
 } // interface PageData {}
 // interface PageState {}
 
@@ -1961,45 +342,58 @@ src/app.html:
 ```
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
 </html>
 ```
 
 src/hooks.server.ts:
 ```
+import { lucia } from '$lib/server/auth';
 import type { Handle } from '@sveltejs/kit';
-import * as auth from '$lib/server/auth';
 
-const handleAuth: Handle = async ({ event, resolve }) => {
-	const sessionToken = event.cookies.get(auth.sessionCookieName);
+export const handle: Handle = async ({ event, resolve }) => {
+    // Get session ID from the cookie
+    const session_id = event.cookies.get(lucia.sessionCookieName);
+    if (!session_id) {
+        event.locals.user = null;
+        event.locals.session = null;
+        return resolve(event);
+    }
 
-	if (!sessionToken) {
-		event.locals.user = null;
-		event.locals.session = null;
-		return resolve(event);
-	}
+    // Validate the session
+    const { session, user } = await lucia.validateSession(session_id);
 
-	const { session, user } = await auth.validateSessionToken(sessionToken);
+    // If session is fresh, create a new cookie with an updated expiration time
+    if (session?.fresh) {
+        const session_cookie = lucia.createSessionCookie(session.id);
+        event.cookies.set(session_cookie.name, session_cookie.value, {
+            path: '.',
+            ...session_cookie.attributes
+        });
+    }
 
-	if (session) {
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-	} else {
-		auth.deleteSessionTokenCookie(event);
-	}
+    // If session is invalid, create a blank cookie to remove the old one
+    if (!session) {
+        const session_cookie = lucia.createBlankSessionCookie();
+        event.cookies.set(session_cookie.name, session_cookie.value, {
+            path: '.',
+            ...session_cookie.attributes
+        });
+    }
 
-	event.locals.user = user;
-	event.locals.session = session;
-	return resolve(event);
+    // Make user and session available on `event.locals`
+    event.locals.user = user;
+    event.locals.session = session;
+
+    return resolve(event);
 };
-
-export const handle: Handle = handleAuth;
 ```
 
 src/lib/index.ts:
@@ -2009,86 +403,41 @@ src/lib/index.ts:
 
 src/lib/server/auth.ts:
 ```
-import type { RequestEvent } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
-import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
+import { Lucia } from 'lucia';
+import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle';
 import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
+import { session, user } from '$lib/server/db/schema';
 
-const DAY_IN_MS = 1000 * 60 * 60 * 24;
+// Create the Drizzle adapter
+const adapter = new DrizzleSQLiteAdapter(db, session, user);
 
-export const sessionCookieName = 'auth-session';
+// Instantiate Lucia
+export const lucia = new Lucia(adapter, {
+    sessionCookie: {
+          attributes: {
+              // set to `true` when using https
+              secure: process.env.NODE_ENV === 'production'
+          }
+    },
+    getUserAttributes: (attributes) => {
+        // This defines what data is available on the `user` object
+        // in `event.locals.user`
+        return {
+            username: attributes.username
+        };
+    }
+});
 
-export function generateSessionToken() {
-	const bytes = crypto.getRandomValues(new Uint8Array(18));
-	const token = encodeBase64url(bytes);
-	return token;
+// IMPORTANT!
+declare module 'lucia' {
+    interface Register {
+        Lucia: typeof lucia;
+        DatabaseUserAttributes: DatabaseUserAttributes;
+    }
 }
 
-export async function createSession(token: string, userId: string) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const session: table.Session = {
-		id: sessionId,
-		userId,
-		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
-	};
-	await db.insert(table.session).values(session);
-	return session;
-}
-
-export async function validateSessionToken(token: string) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const [result] = await db
-		.select({
-			// Adjust user table here to tweak returned data
-			user: { id: table.user.id, username: table.user.username },
-			session: table.session
-		})
-		.from(table.session)
-		.innerJoin(table.user, eq(table.session.userId, table.user.id))
-		.where(eq(table.session.id, sessionId));
-
-	if (!result) {
-		return { session: null, user: null };
-	}
-	const { session, user } = result;
-
-	const sessionExpired = Date.now() >= session.expiresAt.getTime();
-	if (sessionExpired) {
-		await db.delete(table.session).where(eq(table.session.id, session.id));
-		return { session: null, user: null };
-	}
-
-	const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
-	if (renewSession) {
-		session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
-		await db
-			.update(table.session)
-			.set({ expiresAt: session.expiresAt })
-			.where(eq(table.session.id, session.id));
-	}
-
-	return { session, user };
-}
-
-export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
-
-export async function invalidateSession(sessionId: string) {
-	await db.delete(table.session).where(eq(table.session.id, sessionId));
-}
-
-export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
-	event.cookies.set(sessionCookieName, token, {
-		expires: expiresAt,
-		path: '/'
-	});
-}
-
-export function deleteSessionTokenCookie(event: RequestEvent) {
-	event.cookies.delete(sessionCookieName, {
-		path: '/'
-	});
+interface DatabaseUserAttributes {
+    username: string;
 }
 ```
 
@@ -2109,25 +458,93 @@ export const db = drizzle(client, { schema });
 src/lib/server/db/schema.ts:
 ```
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
+import { relations } from 'drizzle-orm';
+
+// --- TABLES ---
 
 export const user = sqliteTable('user', {
-	id: text('id').primaryKey(),
-	age: integer('age'),
-	username: text('username').notNull().unique(),
-	passwordHash: text('password_hash').notNull()
+  id: text('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  // JS: passwordHash, DB column: 'password_hash'
+  passwordHash: text('password_hash').notNull()
 });
 
 export const session = sqliteTable('session', {
-	id: text('id').primaryKey(),
-	userId: text('user_id')
-		.notNull()
-		.references(() => user.id),
-	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
+  id: text('id').primaryKey(),
+  // JS: userId, DB column: 'user_id' (REQUIRED BY LUCIA)
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id),
+  // JS: expiresAt, DB column: 'expires_at' (REQUIRED BY LUCIA)
+  expiresAt: integer('expires_at').notNull()
 });
 
-export type Session = typeof session.$inferSelect;
+export const post = sqliteTable('post', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  // JS: markdownContent, DB column: 'markdown_content'
+  markdownContent: text('markdown_content').notNull(),
+  // JS: authorId, DB column: 'author_id'
+  authorId: text('author_id')
+    .notNull()
+    .references(() => user.id),
+  // JS: createdAt, DB column: 'created_at'
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(new Date())
+});
 
+export const comment = sqliteTable('comment', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  content: text('content').notNull(),
+  // JS: authorId, DB column: 'author_id'
+  authorId: text('author_id')
+    .notNull()
+    .references(() => user.id),
+  // JS: postId, DB column: 'post_id'
+  postId: integer('post_id')
+    .notNull()
+    .references(() => post.id),
+  // JS: createdAt, DB column: 'created_at'
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(new Date())
+});
+
+
+// --- RELATIONS ---
+
+export const userRelations = relations(user, ({ many }) => ({
+  posts: many(post),
+  comments: many(comment)
+}));
+
+export const postRelations = relations(post, ({ one, many }) => ({
+  author: one(user, {
+    // IMPORTANT: Use the new camelCase property names here
+    fields: [post.authorId],
+    references: [user.id]
+  }),
+  comments: many(comment)
+}));
+
+export const commentRelations = relations(comment, ({ one }) => ({
+  author: one(user, {
+    // IMPORTANT: Use the new camelCase property names here
+    fields: [comment.authorId],
+    references: [user.id]
+  }),
+  post: one(post, {
+    // IMPORTANT: Use the new camelCase property names here
+    fields: [comment.postId],
+    references: [post.id]
+  })
+}));
+
+
+// --- TYPE EXPORTS ---
+
+export type Session = typeof session.$inferSelect;
 export type User = typeof user.$inferSelect;
+export type Post = typeof post.$inferSelect;
+export type Comment = typeof comment.$inferSelect;
 ```
 
 src/lib/assets/favicon.svg:
@@ -2138,23 +555,72 @@ src/lib/assets/favicon.svg:
 src/routes/+layout.svelte:
 ```
 <script lang="ts">
-	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+  import '../app.css';
+  import favicon from '$lib/assets/favicon.svg';
 
-	let { children } = $props();
+  let { children } = $props();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+  <link rel="icon" href={favicon} />
 </svelte:head>
 
 {@render children?.()}
 ```
 
+src/routes/+page.server.ts:
+```
+import { db } from '$lib/server/db';
+import { post, user } from '$lib/server/db/schema';
+import { eq, desc } from 'drizzle-orm';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => {
+  // Query posts and join with the user table to get author's username
+  const posts = await db
+    .select({
+      title: post.title,
+      slug: post.slug,
+      author: user.username,
+      created_at: post.createdAt
+    })
+    .from(post)
+    .innerJoin(user, eq(post.authorId, user.id))
+    .orderBy(desc(post.createdAt)); // Show newest posts first
+
+  return { posts };
+};
+```
+
 src/routes/+page.svelte:
 ```
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  import type { PageData } from './$types';
+
+  let { data }: { data: PageData } = $props();
+</script>
+
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">My Blog</h1>
+    <a href="/posts/new" class="rounded-md bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700">New Post</a>
+  </div>
+
+  <div class="space-y-8">
+    {#each data.posts as post}
+      <article>
+        <h2 class="text-2xl font-semibold hover:text-indigo-600">
+          <a href={`/blog/${post.slug}`}>{post.title}</a>
+        </h2>
+        <p class="text-sm text-gray-500 mt-1">
+          By {post.author} on {new Date(post.created_at).toLocaleDateString()}
+        </p>
+      </article>
+    {:else}
+      <p>No posts yet. <a href="/posts/new" class="text-indigo-600 hover:underline">Write the first one!</a></p>
+    {/each}
+  </div>
+</div>
 ```
 
 src/routes/demo/+page.svelte:
@@ -2164,37 +630,38 @@ src/routes/demo/+page.svelte:
 
 src/routes/demo/lucia/+page.server.ts:
 ```
-import * as auth from '$lib/server/auth';
+import { lucia } from '$lib/server/auth'; // Import Lucia
 import { fail, redirect } from '@sveltejs/kit';
-import { getRequestEvent } from '$app/server';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
-	const user = requireLogin();
-	return { user };
+export const load: PageServerLoad = async ({ locals }) => {
+    if (!locals.user) {
+        throw redirect(302, '/demo/lucia/login');
+    }
+    return {
+        user: locals.user
+    };
 };
 
 export const actions: Actions = {
-	logout: async (event) => {
-		if (!event.locals.session) {
-			return fail(401);
-		}
-		await auth.invalidateSession(event.locals.session.id);
-		auth.deleteSessionTokenCookie(event);
+    logout: async (event) => {
+        // Ensure there's a session to invalidate
+        if (!event.locals.session) {
+          return fail(401);
+        }
+        // Invalidate the session with Lucia
+        await lucia.invalidateSession(event.locals.session.id);
 
-		return redirect(302, '/demo/lucia/login');
-	}
+        // Create a blank cookie to clear the session from the browser
+        const session_cookie = lucia.createBlankSessionCookie();
+        event.cookies.set(session_cookie.name, session_cookie.value, {
+            path: '.',
+            ...session_cookie.attributes
+        });
+
+        return redirect(302, '/demo/lucia/login');
+    }
 };
-
-function requireLogin() {
-	const { locals } = getRequestEvent();
-
-	if (!locals.user) {
-		return redirect(302, '/demo/lucia/login');
-	}
-
-	return locals.user;
-}
 ```
 
 src/routes/demo/lucia/+page.svelte:
@@ -2216,111 +683,110 @@ src/routes/demo/lucia/+page.svelte:
 src/routes/demo/lucia/login/+page.server.ts:
 ```
 import { hash, verify } from '@node-rs/argon2';
-import { encodeBase32LowerCase } from '@oslojs/encoding';
+import { generateId } from 'lucia'; // Use Lucia's ID generator
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import * as auth from '$lib/server/auth';
+import { lucia } from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) {
-		return redirect(302, '/demo/lucia');
-	}
-	return {};
+    if (event.locals.user) {
+        return redirect(302, '/demo/lucia');
+    }
+    return {};
 };
 
 export const actions: Actions = {
-	login: async (event) => {
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
+    login: async (event) => {
+        const formData = await event.request.formData();
+        const username = formData.get('username');
+        const password = formData.get('password');
 
-		if (!validateUsername(username)) {
-			return fail(400, {
-				message: 'Invalid username (min 3, max 31 characters, alphanumeric only)'
-			});
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password (min 6, max 255 characters)' });
-		}
+        if (!validate_username(username)) {
+            return fail(400, { message: 'Invalid username (min 3, max 31 characters, alphanumeric only)' });
+        }
+        if (!validate_password(password)) {
+            return fail(400, { message: 'Invalid password (min 6, max 255 characters)' });
+        }
 
-		const results = await db.select().from(table.user).where(eq(table.user.username, username));
+        const [existing_user] = await db
+            .select()
+            .from(table.user)
+            .where(eq(table.user.username, username));
 
-		const existingUser = results.at(0);
-		if (!existingUser) {
-			return fail(400, { message: 'Incorrect username or password' });
-		}
+        if (!existing_user) {
+            return fail(400, { message: 'Incorrect username or password' });
+        }
 
-		const validPassword = await verify(existingUser.passwordHash, password, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
-		if (!validPassword) {
-			return fail(400, { message: 'Incorrect username or password' });
-		}
+        const valid_password = await verify(existing_user.passwordHash, password);
+        if (!valid_password) {
+            return fail(400, { message: 'Incorrect username or password' });
+        }
 
-		const sessionToken = auth.generateSessionToken();
-		const session = await auth.createSession(sessionToken, existingUser.id);
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+        // Create a session with Lucia
+        const session = await lucia.createSession(existing_user.id, {});
+        const session_cookie = lucia.createSessionCookie(session.id);
+        event.cookies.set(session_cookie.name, session_cookie.value, {
+            path: '.',
+            ...session_cookie.attributes
+        });
 
-		return redirect(302, '/demo/lucia');
-	},
-	register: async (event) => {
-		const formData = await event.request.formData();
-		const username = formData.get('username');
-		const password = formData.get('password');
+        return redirect(302, '/demo/lucia');
+      },
+      register: async (event) => {
+          const formData = await event.request.formData();
+          const username = formData.get('username');
+          const password = formData.get('password');
 
-		if (!validateUsername(username)) {
-			return fail(400, { message: 'Invalid username' });
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: 'Invalid password' });
-		}
+        if (!validate_username(username)) {
+            return fail(400, { message: 'Invalid username' });
+        }
+        if (!validate_password(password)) {
+            return fail(400, { message: 'Invalid password' });
+        }
 
-		const userId = generateUserId();
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
+        const userId = generateId(15); // Lucia's built-in ID generator
+        const passwordHash = await hash(password, {
+            memoryCost: 19456,
+            timeCost: 2,
+            outputLen: 32,
+            parallelism: 1
+        });
 
-		try {
-			await db.insert(table.user).values({ id: userId, username, passwordHash });
+        try {
+            // Drizzle will throw an error if username is not unique
+            await db.insert(table.user).values({ id: userId, username, passwordHash });
 
-			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, userId);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-		} catch {
-			return fail(500, { message: 'An error has occurred' });
-		}
-		return redirect(302, '/demo/lucia');
-	}
+            // Create a session with Lucia
+            const session = await lucia.createSession(userId, {});
+            const session_cookie = lucia.createSessionCookie(session.id);
+            event.cookies.set(session_cookie.name, session_cookie.value, {
+                path: '.',
+                ...session_cookie.attributes
+            });
+        } catch (e) {
+            console.error('Error during user registration:', e);
+            // This is a common error when the username is already taken
+            return fail(400, { message: 'Username already taken' });
+        }
+        return redirect(302, '/demo/lucia');
+    }
 };
 
-function generateUserId() {
-	// ID with 120 bits of entropy, or about the same as UUID v4.
-	const bytes = crypto.getRandomValues(new Uint8Array(15));
-	const id = encodeBase32LowerCase(bytes);
-	return id;
+// --- Validation functions remain the same ---
+function validate_username(username: unknown): username is string {
+    return (
+        typeof username === 'string' &&
+        username.length >= 3 &&
+        username.length <= 31 &&
+        /^[a-z0-9_-]+$/.test(username)
+    );
 }
 
-function validateUsername(username: unknown): username is string {
-	return (
-		typeof username === 'string' &&
-		username.length >= 3 &&
-		username.length <= 31 &&
-		/^[a-z0-9_-]+$/.test(username)
-	);
-}
-
-function validatePassword(password: unknown): password is string {
-	return typeof password === 'string' && password.length >= 6 && password.length <= 255;
+function validate_password(password: unknown): password is string {
+    return typeof password === 'string' && password.length >= 6 && password.length <= 255;
 }
 ```
 
@@ -2360,4 +826,178 @@ src/routes/demo/lucia/login/+page.svelte:
 	>
 </form>
 <p style="color: red">{form?.message ?? ''}</p>
+```
+
+src/routes/posts/new/+page.server.ts:
+```
+import { fail, redirect } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import type { Actions, PageServerLoad } from './$types';
+
+// This load function will run before the page loads.
+// It protects the route so only logged in users can access it.
+export const load: PageServerLoad = async (event) => {
+    if (!event.locals.user) {
+        return redirect(302, '/demo/lucia/login'); // Redirect to login page
+    }
+    return {};
+};
+
+export const actions: Actions = {
+    default: async ({ request, locals }) => {
+        // Ensure a user is logged in before processing the form
+        if (!locals.user) {
+            // message = 'You must be logged in to create a post.';
+            return redirect(302, '/demo/lucia/login'); // Redirect to login page
+        }
+
+        const form_data = await request.formData();
+        const title = form_data.get('title') as string;
+        const markdownContent = form_data.get('content') as string;
+
+        if (!title || !markdownContent) {
+            return fail(400, { message: 'Title and content are required.' });
+        }
+
+        // Create a URL-friendly slug from the title
+        const slug = title
+            .toLowerCase()
+            .replace(/\s+/g, '-') // Replace spaces with -
+            .replace(/[^\w-]+/g, ''); // Remove all non-word chars
+
+        try {
+            // Insert the new post into the database
+            await db.insert(table.post).values({
+                title,
+                slug: `${slug}-${Date.now()}`, // Ensure uniqueness by appending timestamp
+                markdownContent,
+                authorId: locals.user.id,
+                createdAt: new Date()
+            });
+        } catch (e) {
+            console.error('Database error while creating post:', e);
+            return fail(500, { message: 'An error occurred while creating the post.' });
+        }
+
+        // Redirect to the blog index after creation
+        return redirect(302, '/');
+    }
+};
+```
+
+src/routes/posts/new/+page.svelte:
+```
+<script lang="ts">
+  import { enhance } from '$app/forms';
+  import type { ActionData } from './$types';
+
+  let { form }: { form: ActionData } = $props();
+</script>
+
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <h1 class="text-3xl font-bold mb-6">Create a New Post</h1>
+
+  <form method="POST" use:enhance class="space-y-6">
+    <div>
+      <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+      />
+    </div>
+
+    <div>
+      <label for="content" class="block text-sm font-medium text-gray-700">Content (Markdown)</label>
+      <textarea
+        id="content"
+        name="content"
+        rows="10"
+        required
+        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 font-mono"
+      ></textarea>
+    </div>
+
+    {#if form?.message}
+      <p class="text-red-500">{form.message}</p>
+    {/if}
+
+    <div>
+      <button
+        type="submit"
+        class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Publish
+      </button>
+    </div>
+  </form>
+</div>
+```
+
+src/routes/[slug]/+page.server.ts:
+```
+import { db } from '$lib/server/db';
+import { post, user } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
+import { error } from '@sveltejs/kit';
+import { marked } from 'marked';
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ params }) => {
+  const results = await db
+    .select({
+      title: post.title,
+      markdown_content: post.markdownContent,
+      author: user.username,
+      created_at: post.createdAt
+    })
+    .from(post)
+    .innerJoin(user, eq(post.authorId, user.id))
+    .where(eq(post.slug, params.slug));
+
+  const blog_post = results.at(0);
+
+  if (!blog_post) {
+    throw error(404, 'Post not found');
+  }
+
+  // Convert markdown to HTML on the server
+  const content_html = await marked.parse(blog_post.markdown_content);
+
+  return {
+    post: {
+      ...blog_post,
+      content_html // Pass the rendered HTML to the page
+    }
+  };
+};
+```
+
+src/routes/[slug]/+page.svelte:
+```
+<script lang="ts">
+  import type { PageData } from './$types';
+
+  let { data }: { data: PageData } = $props();
+</script>
+
+<div class="max-w-2xl mx-auto py-8 px-4">
+  <article>
+    <h1 class="text-4xl font-extrabold mb-2">{data.post.title}</h1>
+    <p class="text-md text-gray-500 mb-8">
+      By {data.post.author} on {new Date(data.post.created_at).toLocaleDateString()}
+    </p>
+
+    <!--
+      The 'prose' class from @tailwindcss/typography will automatically
+      style all the HTML elements generated from your markdown.
+    -->
+    <div class="prose lg:prose-xl">
+      {@html data.post.content_html}
+    </div>
+  </article>
+</div>
 ```
