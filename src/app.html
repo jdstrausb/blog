@@ -1,11 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-color-scheme="%sveltekit.body.class%">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- general metadata tags -->
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFAF5" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#18140F" />
+    
+    <!-- SvelteKit Injected Header -->
     %sveltekit.head%
   </head>
-  <body data-sveltekit-preload-data="hover">
+  <body data-sveltekit-preload-data="hover" class="%color-scheme%">
+    <!-- SvelteKit Hydrated Content -->
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>

@@ -8,6 +8,10 @@ const config = {
 	// for more information about preprocessors
 	preprocess: [vitePreprocess(), mdsvex()],
 	kit: {
+    // env: {
+    //   publicPrefix: 'VITE_PUBLIC_',
+    //   privatePrefix: 'VITE_PRIVATE_',
+    // },
     adapter: adapter(),
     experimental: {
       remoteFunctions: true

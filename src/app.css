@@ -1,3 +1,55 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/* Define CSS variables for light and dark themes */
+:root {
+  --bg-color: white;
+  --text-color: #111827; /* gray-900 */
+  --muted-color: #6b7280; /* gray-500 */
+}
+
+.dark {
+  --bg-color: #111827; /* gray-900 */
+  --text-color: #f9fafb; /* gray-50 */
+  --muted-color: #9ca3af; /* gray-400 */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* For View Transitions API */
+:root.in-theme-transition {
+  &::view-transition-old(root) {
+    animation-delay: 400ms;
+  }
+
+  &::view-transition-new(root) {
+    animation: circle-in 400ms var(--svelte-easing-ease-in-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::view-transition-old(root) {
+      animation-duration: 0ms;
+    }
+
+    &::view-transition-new(root) {
+      animation-duration: 0ms;
+    }
+  }
+}
+
+@keyframes circle-in {
+  from {
+    clip-path: circle(0% at 100% 0%);
+  }
+
+  to {
+    clip-path: circle(140% at 100% 0%);
+  }
+}

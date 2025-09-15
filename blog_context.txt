@@ -1,10 +1,23 @@
-Directory Structure (from 'tree -aL 3 -I node_modules|blog_context.txt|bun.lockb|.svelte-kit|.git|.prettierrc|.prettierignore'):
+Directory Structure (from 'tree -aL 3 -I node_modules|*_context.txt|bun.lockb|.svlete-kit|.git|.prettierrc|.prettierignore|*.svg'):
 ```
 .
+├── .contextignore
 ├── .env
 ├── .env.example
 ├── .gitignore
 ├── .npmrc
+├── .svelte-kit
+│   ├── ambient.d.ts
+│   ├── generated
+│   │   ├── client
+│   │   ├── root.js
+│   │   ├── root.svelte
+│   │   └── server
+│   ├── non-ambient.d.ts
+│   ├── tsconfig.json
+│   └── types
+│       ├── route_meta_data.json
+│       └── src
 ├── README.md
 ├── drizzle.config.ts
 ├── eslint.config.js
@@ -17,9 +30,13 @@ Directory Structure (from 'tree -aL 3 -I node_modules|blog_context.txt|bun.lockb
 │   ├── hooks.server.ts
 │   ├── lib
 │   │   ├── assets
+│   │   ├── components
+│   │   ├── constants
 │   │   ├── index.ts
-│   │   └── server
+│   │   ├── server
+│   │   └── theme.svelte.ts
 │   └── routes
+│       ├── +layout.server.ts
 │       ├── +layout.svelte
 │       ├── +page.server.ts
 │       ├── +page.svelte
@@ -33,18 +50,36 @@ Directory Structure (from 'tree -aL 3 -I node_modules|blog_context.txt|bun.lockb
 ├── tsconfig.json
 └── vite.config.ts
 
-11 directories, 21 files
+19 directories, 30 files
 ```
 
+
+.contextignore:
+```
+node_modules
+*_context.txt
+bun.lockb
+.svlete-kit
+.git
+.prettierrc
+.prettierignore
+*.svg
+```
 
 .env:
 ```
 DATABASE_URL=file:local.db
+
+# cookies
+PUBLIC_COOKIE_NAME_COLOR_SCHEME=dev-blog-color-scheme
 ```
 
 .env.example:
 ```
 DATABASE_URL=file:local.db
+
+# cookies
+PUBLIC_COOKIE_NAME_COLOR_SCHEME=dev-blog-color-scheme
 ```
 
 .gitignore:
@@ -256,6 +291,10 @@ const config = {
 	// for more information about preprocessors
 	preprocess: [vitePreprocess(), mdsvex()],
 	kit: {
+    // env: {
+    //   publicPrefix: 'VITE_PUBLIC_',
+    //   privatePrefix: 'VITE_PRIVATE_',
+    // },
     adapter: adapter(),
     experimental: {
       remoteFunctions: true
@@ -313,11 +352,1143 @@ User-agent: *
 Disallow:
 ```
 
+.svelte-kit/ambient.d.ts:
+```
+// this file is generated — do not edit it
+
+
+/// <reference types="@sveltejs/kit" />
+
+/**
+ * Environment variables [loaded by Vite](https://vitejs.dev/guide/env-and-mode.html#env-files) from `.env` files and `process.env`. Like [`$env/dynamic/private`](https://svelte.dev/docs/kit/$env-dynamic-private), this module cannot be imported into client-side code. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) _and do_ start with [`config.kit.env.privatePrefix`](https://svelte.dev/docs/kit/configuration#env) (if configured).
+ * 
+ * _Unlike_ [`$env/dynamic/private`](https://svelte.dev/docs/kit/$env-dynamic-private), the values exported from this module are statically injected into your bundle at build time, enabling optimisations like dead code elimination.
+ * 
+ * ```ts
+ * import { API_KEY } from '$env/static/private';
+ * ```
+ * 
+ * Note that all environment variables referenced in your code should be declared (for example in an `.env` file), even if they don't have a value until the app is deployed:
+ * 
+ * ```
+ * MY_FEATURE_FLAG=""
+ * ```
+ * 
+ * You can override `.env` values from the command line like so:
+ * 
+ * ```sh
+ * MY_FEATURE_FLAG="enabled" npm run dev
+ * ```
+ */
+declare module '$env/static/private' {
+	export const DATABASE_URL: string;
+	export const TERM_PROGRAM: string;
+	export const NODE: string;
+	export const _P9K_TTY: string;
+	export const ASDF_DIR: string;
+	export const TERM: string;
+	export const SHELL: string;
+	export const HOMEBREW_REPOSITORY: string;
+	export const TMPDIR: string;
+	export const TERM_PROGRAM_VERSION: string;
+	export const TERM_SESSION_ID: string;
+	export const npm_config_local_prefix: string;
+	export const ZSH: string;
+	export const USER: string;
+	export const COMMAND_MODE: string;
+	export const SSH_AUTH_SOCK: string;
+	export const __CF_USER_TEXT_ENCODING: string;
+	export const npm_execpath: string;
+	export const TERM_FEATURES: string;
+	export const FZF_DEFAULT_OPTS: string;
+	export const PAGER: string;
+	export const LSCOLORS: string;
+	export const TERMINFO_DIRS: string;
+	export const PATH: string;
+	export const npm_package_json: string;
+	export const _: string;
+	export const LaunchInstanceID: string;
+	export const __CFBundleIdentifier: string;
+	export const npm_command: string;
+	export const PWD: string;
+	export const npm_lifecycle_event: string;
+	export const P9K_SSH: string;
+	export const npm_package_name: string;
+	export const P9K_TTY: string;
+	export const LANG: string;
+	export const ITERM_PROFILE: string;
+	export const XPC_FLAGS: string;
+	export const npm_package_version: string;
+	export const XPC_SERVICE_NAME: string;
+	export const PYENV_SHELL: string;
+	export const SHLVL: string;
+	export const HOME: string;
+	export const COLORFGBG: string;
+	export const SOURCES_ENV: string;
+	export const NOTES_DIR: string;
+	export const LC_TERMINAL_VERSION: string;
+	export const HOMEBREW_PREFIX: string;
+	export const ITERM_SESSION_ID: string;
+	export const LESS: string;
+	export const LOGNAME: string;
+	export const npm_lifecycle_script: string;
+	export const LC_CTYPE: string;
+	export const FZF_DEFAULT_COMMAND: string;
+	export const BUN_INSTALL: string;
+	export const npm_config_user_agent: string;
+	export const INFOPATH: string;
+	export const HOMEBREW_CELLAR: string;
+	export const LC_TERMINAL: string;
+	export const SECURITYSESSIONID: string;
+	export const npm_node_execpath: string;
+	export const COLORTERM: string;
+	export const NODE_ENV: string;
+}
+
+/**
+ * Similar to [`$env/static/private`](https://svelte.dev/docs/kit/$env-static-private), except that it only includes environment variables that begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) (which defaults to `PUBLIC_`), and can therefore safely be exposed to client-side code.
+ * 
+ * Values are replaced statically at build time.
+ * 
+ * ```ts
+ * import { PUBLIC_BASE_URL } from '$env/static/public';
+ * ```
+ */
+declare module '$env/static/public' {
+	export const PUBLIC_COOKIE_NAME_COLOR_SCHEME: string;
+}
+
+/**
+ * This module provides access to runtime environment variables, as defined by the platform you're running on. For example if you're using [`adapter-node`](https://github.com/sveltejs/kit/tree/main/packages/adapter-node) (or running [`vite preview`](https://svelte.dev/docs/kit/cli)), this is equivalent to `process.env`. This module only includes variables that _do not_ begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) _and do_ start with [`config.kit.env.privatePrefix`](https://svelte.dev/docs/kit/configuration#env) (if configured).
+ * 
+ * This module cannot be imported into client-side code.
+ * 
+ * ```ts
+ * import { env } from '$env/dynamic/private';
+ * console.log(env.DEPLOYMENT_SPECIFIC_VARIABLE);
+ * ```
+ * 
+ * > [!NOTE] In `dev`, `$env/dynamic` always includes environment variables from `.env`. In `prod`, this behavior will depend on your adapter.
+ */
+declare module '$env/dynamic/private' {
+	export const env: {
+		DATABASE_URL: string;
+		TERM_PROGRAM: string;
+		NODE: string;
+		_P9K_TTY: string;
+		ASDF_DIR: string;
+		TERM: string;
+		SHELL: string;
+		HOMEBREW_REPOSITORY: string;
+		TMPDIR: string;
+		TERM_PROGRAM_VERSION: string;
+		TERM_SESSION_ID: string;
+		npm_config_local_prefix: string;
+		ZSH: string;
+		USER: string;
+		COMMAND_MODE: string;
+		SSH_AUTH_SOCK: string;
+		__CF_USER_TEXT_ENCODING: string;
+		npm_execpath: string;
+		TERM_FEATURES: string;
+		FZF_DEFAULT_OPTS: string;
+		PAGER: string;
+		LSCOLORS: string;
+		TERMINFO_DIRS: string;
+		PATH: string;
+		npm_package_json: string;
+		_: string;
+		LaunchInstanceID: string;
+		__CFBundleIdentifier: string;
+		npm_command: string;
+		PWD: string;
+		npm_lifecycle_event: string;
+		P9K_SSH: string;
+		npm_package_name: string;
+		P9K_TTY: string;
+		LANG: string;
+		ITERM_PROFILE: string;
+		XPC_FLAGS: string;
+		npm_package_version: string;
+		XPC_SERVICE_NAME: string;
+		PYENV_SHELL: string;
+		SHLVL: string;
+		HOME: string;
+		COLORFGBG: string;
+		SOURCES_ENV: string;
+		NOTES_DIR: string;
+		LC_TERMINAL_VERSION: string;
+		HOMEBREW_PREFIX: string;
+		ITERM_SESSION_ID: string;
+		LESS: string;
+		LOGNAME: string;
+		npm_lifecycle_script: string;
+		LC_CTYPE: string;
+		FZF_DEFAULT_COMMAND: string;
+		BUN_INSTALL: string;
+		npm_config_user_agent: string;
+		INFOPATH: string;
+		HOMEBREW_CELLAR: string;
+		LC_TERMINAL: string;
+		SECURITYSESSIONID: string;
+		npm_node_execpath: string;
+		COLORTERM: string;
+		NODE_ENV: string;
+		[key: `PUBLIC_${string}`]: undefined;
+		[key: `${string}`]: string | undefined;
+	}
+}
+
+/**
+ * Similar to [`$env/dynamic/private`](https://svelte.dev/docs/kit/$env-dynamic-private), but only includes variables that begin with [`config.kit.env.publicPrefix`](https://svelte.dev/docs/kit/configuration#env) (which defaults to `PUBLIC_`), and can therefore safely be exposed to client-side code.
+ * 
+ * Note that public dynamic environment variables must all be sent from the server to the client, causing larger network requests — when possible, use `$env/static/public` instead.
+ * 
+ * ```ts
+ * import { env } from '$env/dynamic/public';
+ * console.log(env.PUBLIC_DEPLOYMENT_SPECIFIC_VARIABLE);
+ * ```
+ */
+declare module '$env/dynamic/public' {
+	export const env: {
+		PUBLIC_COOKIE_NAME_COLOR_SCHEME: string;
+		[key: `PUBLIC_${string}`]: string | undefined;
+	}
+}
+```
+
+.svelte-kit/non-ambient.d.ts:
+```
+// this file is generated — do not edit it
+
+
+declare module "svelte/elements" {
+	export interface HTMLAttributes<T> {
+		'data-sveltekit-keepfocus'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-noscroll'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-preload-code'?:
+			| true
+			| ''
+			| 'eager'
+			| 'viewport'
+			| 'hover'
+			| 'tap'
+			| 'off'
+			| undefined
+			| null;
+		'data-sveltekit-preload-data'?: true | '' | 'hover' | 'tap' | 'off' | undefined | null;
+		'data-sveltekit-reload'?: true | '' | 'off' | undefined | null;
+		'data-sveltekit-replacestate'?: true | '' | 'off' | undefined | null;
+	}
+}
+
+export {};
+
+
+declare module "$app/types" {
+	export interface AppTypes {
+		RouteId(): "/" | "/about" | "/demo" | "/demo/lucia" | "/demo/lucia/login" | "/posts" | "/posts/new" | "/[slug]";
+		RouteParams(): {
+			"/[slug]": { slug: string }
+		};
+		LayoutParams(): {
+			"/": { slug?: string };
+			"/about": Record<string, never>;
+			"/demo": Record<string, never>;
+			"/demo/lucia": Record<string, never>;
+			"/demo/lucia/login": Record<string, never>;
+			"/posts": Record<string, never>;
+			"/posts/new": Record<string, never>;
+			"/[slug]": { slug: string }
+		};
+		Pathname(): "/" | "/about" | "/about/" | "/demo" | "/demo/" | "/demo/lucia" | "/demo/lucia/" | "/demo/lucia/login" | "/demo/lucia/login/" | "/posts" | "/posts/" | "/posts/new" | "/posts/new/" | `/${string}` & {} | `/${string}/` & {};
+		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
+		Asset(): "/robots.txt" | string & {};
+	}
+}
+```
+
+.svelte-kit/tsconfig.json:
+```
+{
+	"compilerOptions": {
+		"paths": {
+			"$lib": [
+				"../src/lib"
+			],
+			"$lib/*": [
+				"../src/lib/*"
+			],
+			"$app/types": [
+				"./types/index.d.ts"
+			]
+		},
+		"rootDirs": [
+			"..",
+			"./types"
+		],
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"lib": [
+			"esnext",
+			"DOM",
+			"DOM.Iterable"
+		],
+		"moduleResolution": "bundler",
+		"module": "esnext",
+		"noEmit": true,
+		"target": "esnext"
+	},
+	"include": [
+		"ambient.d.ts",
+		"non-ambient.d.ts",
+		"./types/**/$types.d.ts",
+		"../vite.config.js",
+		"../vite.config.ts",
+		"../src/**/*.js",
+		"../src/**/*.ts",
+		"../src/**/*.svelte",
+		"../tests/**/*.js",
+		"../tests/**/*.ts",
+		"../tests/**/*.svelte"
+	],
+	"exclude": [
+		"../node_modules/**",
+		"../src/service-worker.js",
+		"../src/service-worker/**/*.js",
+		"../src/service-worker.ts",
+		"../src/service-worker/**/*.ts",
+		"../src/service-worker.d.ts",
+		"../src/service-worker/**/*.d.ts"
+	]
+}
+```
+
+.svelte-kit/generated/root.js:
+```
+import { asClassComponent } from 'svelte/legacy';
+import Root from './root.svelte';
+export default asClassComponent(Root);
+```
+
+.svelte-kit/generated/root.svelte:
+```
+<!-- This file is generated by @sveltejs/kit — do not edit it! -->
+<svelte:options runes={true} />
+<script>
+	import { setContext, onMount, tick } from 'svelte';
+	import { browser } from '$app/environment';
+
+	// stores
+	let { stores, page, constructors, components = [], form, data_0 = null, data_1 = null } = $props();
+
+	if (!browser) {
+		setContext('__svelte__', stores);
+	}
+
+	if (browser) {
+		$effect.pre(() => stores.page.set(page));
+	} else {
+		stores.page.set(page);
+	}
+	$effect(() => {
+		stores;page;constructors;components;form;data_0;data_1;
+		stores.page.notify();
+	});
+
+	let mounted = $state(false);
+	let navigated = $state(false);
+	let title = $state(null);
+
+	onMount(() => {
+		const unsubscribe = stores.page.subscribe(() => {
+			if (mounted) {
+				navigated = true;
+				tick().then(() => {
+					title = document.title || 'untitled page';
+				});
+			}
+		});
+
+		mounted = true;
+		return unsubscribe;
+	});
+
+	const Pyramid_1=$derived(constructors[1])
+</script>
+
+{#if constructors[1]}
+	{@const Pyramid_0 = constructors[0]}
+							<!-- svelte-ignore binding_property_non_reactive -->
+							<Pyramid_0 bind:this={components[0]} data={data_0} {form} params={page.params}>
+								<!-- svelte-ignore binding_property_non_reactive -->
+										<Pyramid_1 bind:this={components[1]} data={data_1} {form} params={page.params} />
+							</Pyramid_0>
+
+{:else}
+	{@const Pyramid_0 = constructors[0]}
+	<!-- svelte-ignore binding_property_non_reactive -->
+	<Pyramid_0 bind:this={components[0]} data={data_0} {form} params={page.params} />
+
+{/if}
+
+{#if mounted}
+	<div id="svelte-announcer" aria-live="assertive" aria-atomic="true" style="position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px">
+		{#if navigated}
+			{title}
+		{/if}
+	</div>
+{/if}
+```
+
+.svelte-kit/generated/server/internal.js:
+```
+import root from '../root.js';
+import { set_building, set_prerendering } from '__sveltekit/environment';
+import { set_assets } from '__sveltekit/paths';
+import { set_manifest, set_read_implementation } from '__sveltekit/server';
+import { set_private_env, set_public_env } from '../../../node_modules/@sveltejs/kit/src/runtime/shared-server.js';
+
+export const options = {
+	app_template_contains_nonce: false,
+	csp: {"mode":"auto","directives":{"upgrade-insecure-requests":false,"block-all-mixed-content":false},"reportOnly":{"upgrade-insecure-requests":false,"block-all-mixed-content":false}},
+	csrf_check_origin: true,
+	csrf_trusted_origins: [],
+	embedded: false,
+	env_public_prefix: 'PUBLIC_',
+	env_private_prefix: '',
+	hash_routing: false,
+	hooks: null, // added lazily, via `get_hooks`
+	preload_strategy: "modulepreload",
+	root,
+	service_worker: false,
+	service_worker_options: undefined,
+	templates: {
+		app: ({ head, body, assets, nonce, env }) => "<!doctype html>\n<html lang=\"en\" data-color-scheme=\"%sveltekit.body.class%\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n\n    <!-- general metadata tags -->\n    <meta name=\"color-scheme\" content=\"light dark\" />\n    <meta name=\"theme-color\" media=\"(prefers-color-scheme: light)\" content=\"#FFFAF5\" />\n    <meta name=\"theme-color\" media=\"(prefers-color-scheme: dark)\" content=\"#18140F\" />\n    \n    <!-- SvelteKit Injected Header -->\n    " + head + "\n  </head>\n  <body data-sveltekit-preload-data=\"hover\" class=\"%color-scheme%\">\n    <!-- SvelteKit Hydrated Content -->\n    <div style=\"display: contents\">" + body + "</div>\n  </body>\n</html>\n",
+		error: ({ status, message }) => "<!doctype html>\n<html lang=\"en\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\t\t<title>" + message + "</title>\n\n\t\t<style>\n\t\t\tbody {\n\t\t\t\t--bg: white;\n\t\t\t\t--fg: #222;\n\t\t\t\t--divider: #ccc;\n\t\t\t\tbackground: var(--bg);\n\t\t\t\tcolor: var(--fg);\n\t\t\t\tfont-family:\n\t\t\t\t\tsystem-ui,\n\t\t\t\t\t-apple-system,\n\t\t\t\t\tBlinkMacSystemFont,\n\t\t\t\t\t'Segoe UI',\n\t\t\t\t\tRoboto,\n\t\t\t\t\tOxygen,\n\t\t\t\t\tUbuntu,\n\t\t\t\t\tCantarell,\n\t\t\t\t\t'Open Sans',\n\t\t\t\t\t'Helvetica Neue',\n\t\t\t\t\tsans-serif;\n\t\t\t\tdisplay: flex;\n\t\t\t\talign-items: center;\n\t\t\t\tjustify-content: center;\n\t\t\t\theight: 100vh;\n\t\t\t\tmargin: 0;\n\t\t\t}\n\n\t\t\t.error {\n\t\t\t\tdisplay: flex;\n\t\t\t\talign-items: center;\n\t\t\t\tmax-width: 32rem;\n\t\t\t\tmargin: 0 1rem;\n\t\t\t}\n\n\t\t\t.status {\n\t\t\t\tfont-weight: 200;\n\t\t\t\tfont-size: 3rem;\n\t\t\t\tline-height: 1;\n\t\t\t\tposition: relative;\n\t\t\t\ttop: -0.05rem;\n\t\t\t}\n\n\t\t\t.message {\n\t\t\t\tborder-left: 1px solid var(--divider);\n\t\t\t\tpadding: 0 0 0 1rem;\n\t\t\t\tmargin: 0 0 0 1rem;\n\t\t\t\tmin-height: 2.5rem;\n\t\t\t\tdisplay: flex;\n\t\t\t\talign-items: center;\n\t\t\t}\n\n\t\t\t.message h1 {\n\t\t\t\tfont-weight: 400;\n\t\t\t\tfont-size: 1em;\n\t\t\t\tmargin: 0;\n\t\t\t}\n\n\t\t\t@media (prefers-color-scheme: dark) {\n\t\t\t\tbody {\n\t\t\t\t\t--bg: #222;\n\t\t\t\t\t--fg: #ddd;\n\t\t\t\t\t--divider: #666;\n\t\t\t\t}\n\t\t\t}\n\t\t</style>\n\t</head>\n\t<body>\n\t\t<div class=\"error\">\n\t\t\t<span class=\"status\">" + status + "</span>\n\t\t\t<div class=\"message\">\n\t\t\t\t<h1>" + message + "</h1>\n\t\t\t</div>\n\t\t</div>\n\t</body>\n</html>\n"
+	},
+	version_hash: "1gu7ghe"
+};
+
+export async function get_hooks() {
+	let handle;
+	let handleFetch;
+	let handleError;
+	let handleValidationError;
+	let init;
+	({ handle, handleFetch, handleError, handleValidationError, init } = await import("../../../src/hooks.server.ts"));
+
+	let reroute;
+	let transport;
+	
+
+	return {
+		handle,
+		handleFetch,
+		handleError,
+		handleValidationError,
+		init,
+		reroute,
+		transport
+	};
+}
+
+export { set_assets, set_building, set_manifest, set_prerendering, set_private_env, set_public_env, set_read_implementation };
+```
+
+.svelte-kit/generated/client/app.js:
+```
+export { matchers } from './matchers.js';
+
+export const nodes = [
+	() => import('./nodes/0'),
+	() => import('./nodes/1'),
+	() => import('./nodes/2'),
+	() => import('./nodes/3'),
+	() => import('./nodes/4'),
+	() => import('./nodes/5'),
+	() => import('./nodes/6'),
+	() => import('./nodes/7'),
+	() => import('./nodes/8')
+];
+
+export const server_loads = [0];
+
+export const dictionary = {
+		"/": [~2],
+		"/about": [7],
+		"/demo": [3],
+		"/demo/lucia": [~4],
+		"/demo/lucia/login": [~5],
+		"/posts/new": [~6],
+		"/[slug]": [~8]
+	};
+
+export const hooks = {
+	handleError: (({ error }) => { console.error(error) }),
+	
+	reroute: (() => {}),
+	transport: {}
+};
+
+export const decoders = Object.fromEntries(Object.entries(hooks.transport).map(([k, v]) => [k, v.decode]));
+
+export const hash = false;
+
+export const decode = (type, value) => decoders[type](value);
+
+export { default as root } from '../root.js';
+```
+
+.svelte-kit/generated/client/matchers.js:
+```
+export const matchers = {};
+```
+
+.svelte-kit/generated/client/nodes/0.js:
+```
+export { default as component } from "../../../../src/routes/+layout.svelte";
+```
+
+.svelte-kit/generated/client/nodes/1.js:
+```
+export { default as component } from "../../../../node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte";
+```
+
+.svelte-kit/generated/client/nodes/2.js:
+```
+export { default as component } from "../../../../src/routes/+page.svelte";
+```
+
+.svelte-kit/generated/client/nodes/3.js:
+```
+export { default as component } from "../../../../src/routes/demo/+page.svelte";
+```
+
+.svelte-kit/generated/client/nodes/4.js:
+```
+export { default as component } from "../../../../src/routes/demo/lucia/+page.svelte";
+```
+
+.svelte-kit/generated/client/nodes/5.js:
+```
+export { default as component } from "../../../../src/routes/demo/lucia/login/+page.svelte";
+```
+
+.svelte-kit/generated/client/nodes/6.js:
+```
+export { default as component } from "../../../../src/routes/posts/new/+page.svelte";
+```
+
+.svelte-kit/generated/client/nodes/7.js:
+```
+export { default as component } from "../../../../src/routes/about/+page.svelte";
+```
+
+.svelte-kit/generated/client/nodes/8.js:
+```
+export { default as component } from "../../../../src/routes/[slug]/+page.svelte";
+```
+
+.svelte-kit/types/route_meta_data.json:
+```
+{
+	"/": [
+		"src/routes/+page.server.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/about": [
+		"src/routes/+layout.server.ts"
+	],
+	"/demo": [
+		"src/routes/+layout.server.ts"
+	],
+	"/demo/lucia": [
+		"src/routes/demo/lucia/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/demo/lucia/login": [
+		"src/routes/demo/lucia/login/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/posts/new": [
+		"src/routes/posts/new/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/[slug]": [
+		"src/routes/[slug]/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	]
+}
+```
+
+.svelte-kit/types/src/routes/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = {  };
+type RouteId = '/';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageServerParentData = EnsureDefined<LayoutServerData>;
+type PageParentData = EnsureDefined<LayoutData>;
+type LayoutRouteId = RouteId | "/" | "/demo" | "/demo/lucia" | "/demo/lucia/login" | "/posts/new" | "/about" | "/[slug]" | null
+type LayoutParams = RouteParams & { slug?: string }
+type LayoutServerParentData = EnsureDefined<{}>;
+type LayoutParentData = EnsureDefined<{}>;
+
+export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
+export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
+export type ActionData = unknown;
+export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
+export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
+export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
+export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
+export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
+export type LayoutServerLoad<OutputData extends OutputDataShape<LayoutServerParentData> = OutputDataShape<LayoutServerParentData>> = Kit.ServerLoad<LayoutParams, LayoutServerParentData, OutputData, LayoutRouteId>;
+export type LayoutServerLoadEvent = Parameters<LayoutServerLoad>[0];
+export type LayoutServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+layout.server.js').load>>>>>>;
+export type LayoutData = Expand<Omit<LayoutParentData, keyof LayoutServerData> & EnsureDefined<LayoutServerData>>;
+export type LayoutProps = { params: LayoutParams; data: LayoutData; children: import("svelte").Snippet }
+export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
+```
+
+.svelte-kit/types/src/routes/proxy+layout.server.ts:
+```
+// @ts-nocheck
+import type { LayoutServerLoad } from './$types';
+
+export const load = ({ locals }: Parameters<LayoutServerLoad>[0]) => {
+    // This function takes the `shared_settings` from event.locals
+    // (which was set by the app's server hook) and returns it.
+    // This ensures it's available for the `data` prop in every page.
+    return {
+        shared_settings: locals.shared_settings
+    };
+}
+```
+
+.svelte-kit/types/src/routes/proxy+page.server.ts:
+```
+// @ts-nocheck
+import { db } from '$lib/server/db';
+import { post, user } from '$lib/server/db/schema';
+import { eq, desc } from 'drizzle-orm';
+import type { PageServerLoad } from './$types';
+
+export const load = async () => {
+  // Query posts and join with the user table to get author's username
+  const posts = await db
+    .select({
+      title: post.title,
+      slug: post.slug,
+      author: user.username,
+      created_at: post.createdAt
+    })
+    .from(post)
+    .innerJoin(user, eq(post.authorId, user.id))
+    .orderBy(desc(post.createdAt)); // Show newest posts first
+
+  return { posts };
+};
+;null as any as PageServerLoad;
+```
+
+.svelte-kit/types/src/routes/demo/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = {  };
+type RouteId = '/demo';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageParentData = EnsureDefined<import('../$types.js').LayoutData>;
+
+export type PageServerData = null;
+export type PageData = Expand<PageParentData>;
+export type PageProps = { params: RouteParams; data: PageData }
+```
+
+.svelte-kit/types/src/routes/demo/lucia/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = {  };
+type RouteId = '/demo/lucia';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageServerParentData = EnsureDefined<import('../../$types.js').LayoutServerData>;
+type PageParentData = EnsureDefined<import('../../$types.js').LayoutData>;
+
+export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
+export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
+type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;
+type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];
+type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;
+type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];
+type ActionsExport = typeof import('./proxy+page.server.js').actions
+export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>
+export type ActionData = Expand<Kit.AwaitedActions<ActionsExport>> | null;
+export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
+export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
+export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
+export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
+export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
+export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
+```
+
+.svelte-kit/types/src/routes/demo/lucia/proxy+page.server.ts:
+```
+// @ts-nocheck
+import { lucia } from '$lib/server/auth'; // Import Lucia
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = async ({ locals }: Parameters<PageServerLoad>[0]) => {
+    if (!locals.user) {
+        throw redirect(302, '/demo/lucia/login');
+    }
+    return {
+        user: locals.user
+    };
+};
+
+export const actions = {
+    logout: async (event: import('./$types').RequestEvent) => {
+        // Ensure there's a session to invalidate
+        if (!event.locals.session) {
+          return fail(401);
+        }
+        // Invalidate the session with Lucia
+        await lucia.invalidateSession(event.locals.session.id);
+
+        // Create a blank cookie to clear the session from the browser
+        const session_cookie = lucia.createBlankSessionCookie();
+        event.cookies.set(session_cookie.name, session_cookie.value, {
+            path: '.',
+            ...session_cookie.attributes
+        });
+
+        return redirect(302, '/demo/lucia/login');
+    }
+};
+;null as any as Actions;
+```
+
+.svelte-kit/types/src/routes/demo/lucia/login/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = {  };
+type RouteId = '/demo/lucia/login';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageServerParentData = EnsureDefined<import('../../../$types.js').LayoutServerData>;
+type PageParentData = EnsureDefined<import('../../../$types.js').LayoutData>;
+
+export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
+export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
+type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;
+type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];
+type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;
+type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];
+type ActionsExport = typeof import('./proxy+page.server.js').actions
+export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>
+export type ActionData = Expand<Kit.AwaitedActions<ActionsExport>> | null;
+export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
+export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
+export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
+export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
+export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
+export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
+```
+
+.svelte-kit/types/src/routes/demo/lucia/login/proxy+page.server.ts:
+```
+// @ts-nocheck
+import { hash, verify } from '@node-rs/argon2';
+import { generateId } from 'lucia'; // Use Lucia's ID generator
+import { fail, redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { lucia } from '$lib/server/auth';
+import { db } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load = async (event: Parameters<PageServerLoad>[0]) => {
+    if (event.locals.user) {
+        return redirect(302, '/demo/lucia');
+    }
+    return {};
+};
+
+export const actions = {
+    login: async (event: import('./$types').RequestEvent) => {
+        const formData = await event.request.formData();
+        const username = formData.get('username');
+        const password = formData.get('password');
+
+        if (!validate_username(username)) {
+            return fail(400, { message: 'Invalid username (min 3, max 31 characters, alphanumeric only)' });
+        }
+        if (!validate_password(password)) {
+            return fail(400, { message: 'Invalid password (min 6, max 255 characters)' });
+        }
+
+        const [existing_user] = await db
+            .select()
+            .from(table.user)
+            .where(eq(table.user.username, username));
+
+        if (!existing_user) {
+            return fail(400, { message: 'Incorrect username or password' });
+        }
+
+        const valid_password = await verify(existing_user.passwordHash, password);
+        if (!valid_password) {
+            return fail(400, { message: 'Incorrect username or password' });
+        }
+
+        // Create a session with Lucia
+        const session = await lucia.createSession(existing_user.id, {});
+        const session_cookie = lucia.createSessionCookie(session.id);
+        event.cookies.set(session_cookie.name, session_cookie.value, {
+            path: '.',
+            ...session_cookie.attributes
+        });
+
+        return redirect(302, '/demo/lucia');
+      },
+      register: async (event: import('./$types').RequestEvent) => {
+          const formData = await event.request.formData();
+          const username = formData.get('username');
+          const password = formData.get('password');
+
+        if (!validate_username(username)) {
+            return fail(400, { message: 'Invalid username' });
+        }
+        if (!validate_password(password)) {
+            return fail(400, { message: 'Invalid password' });
+        }
+
+        const userId = generateId(15); // Lucia's built-in ID generator
+        const passwordHash = await hash(password, {
+            memoryCost: 19456,
+            timeCost: 2,
+            outputLen: 32,
+            parallelism: 1
+        });
+
+        try {
+            // Drizzle will throw an error if username is not unique
+            await db.insert(table.user).values({ id: userId, username, passwordHash });
+
+            // Create a session with Lucia
+            const session = await lucia.createSession(userId, {});
+            const session_cookie = lucia.createSessionCookie(session.id);
+            event.cookies.set(session_cookie.name, session_cookie.value, {
+                path: '.',
+                ...session_cookie.attributes
+            });
+        } catch (e) {
+            console.error('Error during user registration:', e);
+            // This is a common error when the username is already taken
+            return fail(400, { message: 'Username already taken' });
+        }
+        return redirect(302, '/demo/lucia');
+    }
+};
+
+// --- Validation functions remain the same ---
+function validate_username(username: unknown): username is string {
+    return (
+        typeof username === 'string' &&
+        username.length >= 3 &&
+        username.length <= 31 &&
+        /^[a-z0-9_-]+$/.test(username)
+    );
+}
+
+function validate_password(password: unknown): password is string {
+    return typeof password === 'string' && password.length >= 6 && password.length <= 255;
+}
+;null as any as Actions;
+```
+
+.svelte-kit/types/src/routes/posts/new/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = {  };
+type RouteId = '/posts/new';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageServerParentData = EnsureDefined<import('../../$types.js').LayoutServerData>;
+type PageParentData = EnsureDefined<import('../../$types.js').LayoutData>;
+
+export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
+export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
+type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;
+type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];
+type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;
+type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];
+type ActionsExport = typeof import('./proxy+page.server.js').actions
+export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>
+export type ActionData = Expand<Kit.AwaitedActions<ActionsExport>> | null;
+export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
+export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
+export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
+export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
+export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
+export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
+```
+
+.svelte-kit/types/src/routes/posts/new/proxy+page.server.ts:
+```
+// @ts-nocheck
+import { fail, redirect } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import type { Actions, PageServerLoad } from './$types';
+
+// This load function will run before the page loads.
+// It protects the route so only logged in users can access it.
+export const load = async (event: Parameters<PageServerLoad>[0]) => {
+    if (!event.locals.user) {
+        return redirect(302, '/demo/lucia/login'); // Redirect to login page
+    }
+    return {};
+};
+
+export const actions = {
+    default: async ({ request, locals }: import('./$types').RequestEvent) => {
+        // Ensure a user is logged in before processing the form
+        if (!locals.user) {
+            // message = 'You must be logged in to create a post.';
+            return redirect(302, '/demo/lucia/login'); // Redirect to login page
+        }
+
+        const form_data = await request.formData();
+        const title = form_data.get('title') as string;
+        const markdownContent = form_data.get('content') as string;
+
+        if (!title || !markdownContent) {
+            return fail(400, { message: 'Title and content are required.' });
+        }
+
+        // Create a URL-friendly slug from the title
+        const slug = title
+            .toLowerCase()
+            .replace(/\s+/g, '-') // Replace spaces with -
+            .replace(/[^\w-]+/g, ''); // Remove all non-word chars
+
+        try {
+            // Insert the new post into the database
+            await db.insert(table.post).values({
+                title,
+                slug: `${slug}-${Date.now()}`, // Ensure uniqueness by appending timestamp
+                markdownContent,
+                authorId: locals.user.id,
+                createdAt: new Date()
+            });
+        } catch (e) {
+            console.error('Database error while creating post:', e);
+            return fail(500, { message: 'An error occurred while creating the post.' });
+        }
+
+        // Redirect to the blog index after creation
+        return redirect(302, '/');
+    }
+};
+
+;null as any as Actions;
+```
+
+.svelte-kit/types/src/routes/about/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = {  };
+type RouteId = '/about';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageParentData = EnsureDefined<import('../$types.js').LayoutData>;
+
+export type PageServerData = null;
+export type PageData = Expand<PageParentData>;
+export type PageProps = { params: RouteParams; data: PageData }
+```
+
+.svelte-kit/types/src/routes/[slug]/$types.d.ts:
+```
+import type * as Kit from '@sveltejs/kit';
+
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+// @ts-ignore
+type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;
+type RouteParams = { slug: string };
+type RouteId = '/[slug]';
+type MaybeWithVoid<T> = {} extends T ? T | void : T;
+export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];
+type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>
+type EnsureDefined<T> = T extends null | undefined ? {} : T;
+type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;
+export type Snapshot<T = any> = Kit.Snapshot<T>;
+type PageServerParentData = EnsureDefined<import('../$types.js').LayoutServerData>;
+type PageParentData = EnsureDefined<import('../$types.js').LayoutData>;
+
+export type EntryGenerator = () => Promise<Array<RouteParams>> | Array<RouteParams>;
+export type PageServerLoad<OutputData extends OutputDataShape<PageServerParentData> = OutputDataShape<PageServerParentData>> = Kit.ServerLoad<RouteParams, PageServerParentData, OutputData, RouteId>;
+export type PageServerLoadEvent = Parameters<PageServerLoad>[0];
+export type ActionData = unknown;
+export type PageServerData = Expand<OptionalUnion<EnsureDefined<Kit.LoadProperties<Awaited<ReturnType<typeof import('./proxy+page.server.js').load>>>>>>;
+export type PageData = Expand<Omit<PageParentData, keyof PageServerData> & EnsureDefined<PageServerData>>;
+export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>
+export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>
+export type PageProps = { params: RouteParams; data: PageData; form: ActionData }
+export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;
+```
+
+.svelte-kit/types/src/routes/[slug]/proxy+page.server.ts:
+```
+// @ts-nocheck
+import { db } from '$lib/server/db';
+import { post, user } from '$lib/server/db/schema';
+import { eq } from 'drizzle-orm';
+import { error } from '@sveltejs/kit';
+import { marked } from 'marked';
+import type { PageServerLoad } from './$types';
+
+export const load = async ({ params }: Parameters<PageServerLoad>[0]) => {
+  const results = await db
+    .select({
+      title: post.title,
+      markdown_content: post.markdownContent,
+      author: user.username,
+      created_at: post.createdAt
+    })
+    .from(post)
+    .innerJoin(user, eq(post.authorId, user.id))
+    .where(eq(post.slug, params.slug));
+
+  const blog_post = results.at(0);
+
+  if (!blog_post) {
+    throw error(404, 'Post not found');
+  }
+
+  // Convert markdown to HTML on the server
+  const content_html = await marked.parse(blog_post.markdown_content);
+
+  return {
+    post: {
+      ...blog_post,
+      content_html // Pass the rendered HTML to the page
+    }
+  };
+};
+```
+
 src/app.css:
 ```
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/* Define CSS variables for light and dark themes */
+:root {
+  --bg-color: white;
+  --text-color: #111827; /* gray-900 */
+  --muted-color: #6b7280; /* gray-500 */
+}
+
+.dark {
+  --bg-color: #111827; /* gray-900 */
+  --text-color: #f9fafb; /* gray-50 */
+  --muted-color: #9ca3af; /* gray-400 */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* For View Transitions API */
+:root.in-theme-transition {
+  &::view-transition-old(root) {
+    animation-delay: 400ms;
+  }
+
+  &::view-transition-new(root) {
+    animation: circle-in 400ms var(--svelte-easing-ease-in-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::view-transition-old(root) {
+      animation-duration: 0ms;
+    }
+
+    &::view-transition-new(root) {
+      animation-duration: 0ms;
+    }
+  }
+}
+
+@keyframes circle-in {
+  from {
+    clip-path: circle(0% at 100% 0%);
+  }
+
+  to {
+    clip-path: circle(140% at 100% 0%);
+  }
+}
 ```
 
 src/app.d.ts:
@@ -326,29 +1497,52 @@ src/app.d.ts:
 // for information about these interfaces
 declare global {
   namespace App {
-    interface Locals {
-      user: import('$lib/server/auth').SessionValidationResult['user'];
-      session: import('$lib/server/auth').SessionValidationResult['session'];
-    }
-  } // interface Error {}
-  // interface Locals {}
-} // interface PageData {}
-// interface PageState {}
 
+    declare type ColorScheme = import('$lib/constants').ColorScheme;
+    declare type SharedSettings = {
+        colorScheme: ColorScheme;
+    };
+    interface Locals {
+        user: import('$lib/server/auth').SessionValidationResult['user'];
+        session: import('$lib/server/auth').SessionValidationResult['session'];
+        shared_settings: SharedSettings;
+        internal_referer?: URL;
+    }
+
+    interface PageData {
+        shared_settings: SharedSettings;
+    }
+  }
+  
+  interface Error {
+      code: string;
+  }
+}
+
+// interface PageState {}
 // interface Platform {}
+
 export {};
 ```
 
 src/app.html:
 ```
 <!doctype html>
-<html lang="en">
+<html lang="en" data-color-scheme="%sveltekit.body.class%">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- general metadata tags -->
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFAF5" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#18140F" />
+    
+    <!-- SvelteKit Injected Header -->
     %sveltekit.head%
   </head>
-  <body data-sveltekit-preload-data="hover">
+  <body data-sveltekit-preload-data="hover" class="%color-scheme%">
+    <!-- SvelteKit Hydrated Content -->
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>
@@ -356,50 +1550,123 @@ src/app.html:
 
 src/hooks.server.ts:
 ```
-import { lucia } from '$lib/server/auth';
-import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
+import { 
+    create_auth_server_hook, 
+    create_referer_tracking_hook,
+    create_color_scheme_server_hook 
+} from '$lib/server/hooks';
 
-export const handle: Handle = async ({ event, resolve }) => {
-    // Get session ID from the cookie
-    const session_id = event.cookies.get(lucia.sessionCookieName);
-    if (!session_id) {
-        event.locals.user = null;
-        event.locals.session = null;
-        return resolve(event);
-    }
+import { building } from '$app/environment';
+import { PUBLIC_COOKIE_NAME_COLOR_SCHEME } from '$env/static/public';
 
-    // Validate the session
-    const { session, user } = await lucia.validateSession(session_id);
-
-    // If session is fresh, create a new cookie with an updated expiration time
-    if (session?.fresh) {
-        const session_cookie = lucia.createSessionCookie(session.id);
-        event.cookies.set(session_cookie.name, session_cookie.value, {
-            path: '.',
-            ...session_cookie.attributes
-        });
-    }
-
-    // If session is invalid, create a blank cookie to remove the old one
-    if (!session) {
-        const session_cookie = lucia.createBlankSessionCookie();
-        event.cookies.set(session_cookie.name, session_cookie.value, {
-            path: '.',
-            ...session_cookie.attributes
-        });
-    }
-
-    // Make user and session available on `event.locals`
-    event.locals.user = user;
-    event.locals.session = session;
-
-    return resolve(event);
-};
+export const handle = sequence(
+    create_auth_server_hook(),
+    create_referer_tracking_hook(),
+    create_color_scheme_server_hook({ 
+        cookie_name: PUBLIC_COOKIE_NAME_COLOR_SCHEME, 
+        building 
+    }),
+);
 ```
 
 src/lib/index.ts:
 ```
 // place files you want to import through the `$lib` alias in this folder.
+```
+
+src/lib/theme.svelte.ts:
+```
+import { getContext, setContext } from 'svelte';
+import { MediaQuery } from 'svelte/reactivity';
+import { PUBLIC_COOKIE_NAME_COLOR_SCHEME } from '$env/static/public';
+import type { ColorScheme } from '$lib/constants';
+
+interface ColorSchemeContextInit {
+    // The user's preferred color scheme from SSR
+    user?: ColorScheme;
+}
+
+export class ColorSchemeContext {
+    static KEY = Symbol('app:color-scheme');
+    
+    // A reactive media query that tracks the system's preferred color scheme.
+    #preferredColorScheme = new MediaQuery('(prefers-color-scheme: dark)');
+    
+    /** The user's explicit preference ('light', 'dark', or 'system'). This is the state we'll manage.  */
+    user = $state('system' as ColorScheme);
+    
+    /** The system's detected color scheme ('light' or 'dark'). */
+    system = $derived(this.#preferredColorScheme.current ? 'dark' : 'light');
+    
+    /** The final, resolved color scheme to be applied ('light' or 'dark') */
+    resolved = $derived(this.user === 'system' ? this.system : this.user);
+    
+    /**
+    * Initializes the context with the value from the server.
+    * @param {ColorSchemeContextInit} init
+    */
+    constructor(init: ColorSchemeContextInit) {
+        this.user = init.user || 'system';
+        
+        // This effect runs whenever `this.resolved` or `this.user` changes.
+        $effect(() => {
+            if (typeof window !== 'undefined') {
+                // Update the class on the body to apply CSS variables.
+                // This also ensures the server-set class is correctly managed on client navigation.
+                document.body.className = this.resolved;
+                
+                // Update the data attribute on the html element for consistency and potential JS hooks.
+                document.documentElement.dataset.colorScheme = this.resolved;
+                
+                // Update the cookie to persist the user's preference.
+                document.cookie = `${PUBLIC_COOKIE_NAME_COLOR_SCHEME}=${this.user}; path=/; SameSite=Lax; Secure; max-age=604800`;
+            }
+        });
+    }
+    
+    /**
+    * Sets the context for the application.
+    * @param {ColorSchemeContextInit} init
+    */
+    static set(init: ColorSchemeContextInit) {
+        return setContext(this.KEY, new ColorSchemeContext(init));
+    }
+    
+    /**
+    * Retrieves the context.
+    * @returns {ColorSchemeContext}
+    */
+    static get() {
+        return getContext<ColorSchemeContext>(this.KEY);
+    }
+}
+```
+
+src/lib/constants/index.ts:
+```
+import { type Cookies } from '@sveltejs/kit';
+
+export const STATUSES = [ 'info', 'success', 'warning', 'error' ] as const;
+export type Status = (typeof STATUSES)[number];
+
+export const COLOR_SCHEMES = [ 'system', 'light', 'dark' ] as const;
+export type ColorScheme = (typeof COLOR_SCHEMES)[number]; 
+
+// export const SCREENS = ['mobile', 'tablet', 'desktop'] as const;
+// export type Screen = (typeof SCREENS)[number];
+
+export const COMMON_COOKIE_CONFIG = {
+    path: '/',
+    secure: true,
+    httpOnly: true,
+    maxAge: 604800, // 7 days
+} satisfies Parameters<Cookies['set']>[2];
+
+export const PUBLIC_COOKIE_CONFIG = {
+    ...COMMON_COOKIE_CONFIG,
+    httpOnly: false,
+} satisfies Parameters<Cookies['set']>[2];
 ```
 
 src/lib/server/auth.ts:
@@ -440,6 +1707,141 @@ declare module 'lucia' {
 interface DatabaseUserAttributes {
     username: string;
 }
+```
+
+src/lib/server/hooks.ts:
+```
+import type { Handle } from '@sveltejs/kit';
+import type { ColorScheme } from '$lib/constants';
+import { COLOR_SCHEMES, PUBLIC_COOKIE_CONFIG } from '$lib/constants';
+import { lucia } from '$lib/server/auth';
+
+// interface AuthServerHookOptions {
+//     lucia: typeof lucia;
+// }
+
+interface ColorSchemeServerHookOptions {
+    cookie_name: string;
+    building: boolean;
+    transform?: boolean | string;
+}
+
+/**
+ * Creates an authentication server hook for handling user sessions
+ */
+export const create_auth_server_hook = function (): Handle { // options: AuthServerHookOptions
+    return async function ({ event, resolve }) {
+        const { locals, cookies } = event;
+        // const { lucia } = options;
+
+        // Get session ID from the cookie
+        const session_id = cookies.get(lucia.sessionCookieName);
+        if (!session_id) {
+            locals.user = null;
+            locals.session = null;
+            return resolve(event);
+        }
+
+        // Validate the session
+        const { session, user } = await lucia.validateSession(session_id);
+
+        // If session is fresh, create a new cookie with an updated expiration time
+        if (session?.fresh) {
+            const session_cookie = lucia.createSessionCookie(session.id);
+            cookies.set(session_cookie.name, session_cookie.value, {
+                path: '.',
+                ...session_cookie.attributes
+            });
+        }
+
+        // If session is invalid, create a blank cookie to remove the old one
+        if (!session) {
+            const session_cookie = lucia.createBlankSessionCookie();
+            cookies.set(session_cookie.name, session_cookie.value, {
+                path: '.',
+                ...session_cookie.attributes
+            });
+        }
+
+        // Make user and session available on `event.locals`
+        locals.user = user;
+        locals.session = session;
+
+        return resolve(event);
+    };
+};
+
+/**
+ * Creates a referer tracking hook for internal navigation tracking
+ */
+export const create_referer_tracking_hook = function (): Handle {
+    return async function ({ event, resolve }) {
+        const { locals, request, url } = event;
+
+        const referer = request.headers.get('Referer');
+        if (referer) {
+            const url_referer = new URL(referer);
+            if (url_referer.origin === url.origin) {
+                locals.internal_referer = url_referer;
+            }
+        }
+
+        return resolve(event);
+    };
+};
+
+/**
+ * Type guard to check if a value is a valid ColorScheme
+ */
+function is_valid_color_scheme(value: string | null | undefined): value is ColorScheme {
+    return COLOR_SCHEMES.includes(value as ColorScheme);
+}
+
+/**
+ * Validates and returns a valid ColorScheme value
+ */
+function validate_color_scheme(value: string | null | undefined): ColorScheme {
+    return is_valid_color_scheme(value) ? value : 'system';
+}
+
+/**
+ * Creates a color scheme server hook for handling theme preferences
+ */
+export const create_color_scheme_server_hook = function (options: ColorSchemeServerHookOptions): Handle {
+    return async function ({ event, resolve }) {
+        const { locals, cookies, url, route } = event;
+        const { cookie_name, building, transform } = options;
+
+        // Get the raw value and validate it
+        const raw_color_scheme = 
+            (!building && url.searchParams.get('color-scheme')) ||
+            cookies.get(cookie_name) ||
+            'system';
+
+        const color_scheme = validate_color_scheme(raw_color_scheme);
+
+        locals.shared_settings = {
+            colorScheme: color_scheme,
+        };
+
+        // setting cookies  
+        cookies.set(cookie_name, color_scheme, PUBLIC_COOKIE_CONFIG);
+
+        // return early if fetching api routes
+        if (route.id?.includes('(api)')) {
+            return resolve(event);
+        }
+
+        if (transform === false) return resolve(event);
+        const placeholder = typeof transform === 'string' ? transform : '%color-scheme%';
+
+        // const body_class = color_scheme === 'dark' ? 'dark' : '';
+        
+        return await resolve(event, {
+            transformPageChunk: ({ html }) => html.replace(placeholder, color_scheme),
+        });
+    };
+};
 ```
 
 src/lib/server/db/index.ts:
@@ -548,18 +1950,117 @@ export type Post = typeof post.$inferSelect;
 export type Comment = typeof comment.$inferSelect;
 ```
 
-src/lib/assets/favicon.svg:
+src/lib/components/Header.svelte:
 ```
-<svg xmlns="http://www.w3.org/2000/svg" width="107" height="128" viewBox="0 0 107 128"><title>svelte-logo</title><path d="M94.157 22.819c-10.4-14.885-30.94-19.297-45.792-9.835L22.282 29.608A29.92 29.92 0 0 0 8.764 49.65a31.5 31.5 0 0 0 3.108 20.231 30 30 0 0 0-4.477 11.183 31.9 31.9 0 0 0 5.448 24.116c10.402 14.887 30.942 19.297 45.791 9.835l26.083-16.624A29.92 29.92 0 0 0 98.235 78.35a31.53 31.53 0 0 0-3.105-20.232 30 30 0 0 0 4.474-11.182 31.88 31.88 0 0 0-5.447-24.116" style="fill:#ff3e00"/><path d="M45.817 106.582a20.72 20.72 0 0 1-22.237-8.243 19.17 19.17 0 0 1-3.277-14.503 18 18 0 0 1 .624-2.435l.49-1.498 1.337.981a33.6 33.6 0 0 0 10.203 5.098l.97.294-.09.968a5.85 5.85 0 0 0 1.052 3.878 6.24 6.24 0 0 0 6.695 2.485 5.8 5.8 0 0 0 1.603-.704L69.27 76.28a5.43 5.43 0 0 0 2.45-3.631 5.8 5.8 0 0 0-.987-4.371 6.24 6.24 0 0 0-6.698-2.487 5.7 5.7 0 0 0-1.6.704l-9.953 6.345a19 19 0 0 1-5.296 2.326 20.72 20.72 0 0 1-22.237-8.243 19.17 19.17 0 0 1-3.277-14.502 17.99 17.99 0 0 1 8.13-12.052l26.081-16.623a19 19 0 0 1 5.3-2.329 20.72 20.72 0 0 1 22.237 8.243 19.17 19.17 0 0 1 3.277 14.503 18 18 0 0 1-.624 2.435l-.49 1.498-1.337-.98a33.6 33.6 0 0 0-10.203-5.1l-.97-.294.09-.968a5.86 5.86 0 0 0-1.052-3.878 6.24 6.24 0 0 0-6.696-2.485 5.8 5.8 0 0 0-1.602.704L37.73 51.72a5.42 5.42 0 0 0-2.449 3.63 5.79 5.79 0 0 0 .986 4.372 6.24 6.24 0 0 0 6.698 2.486 5.8 5.8 0 0 0 1.602-.704l9.952-6.342a19 19 0 0 1 5.295-2.328 20.72 20.72 0 0 1 22.237 8.242 19.17 19.17 0 0 1 3.277 14.503 18 18 0 0 1-8.13 12.053l-26.081 16.622a19 19 0 0 1-5.3 2.328" style="fill:#fff"/></svg>
+<script lang="ts">
+  import { page } from '$app/state';
+  import ThemeToggle from './ThemeToggle.svelte';
+  const path = $derived(page.url.pathname);
+</script>
+
+<header class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
+  <h1 class="text-4xl font-bold text-center sm:text-left">
+    <a href="/">Jamie Strausbaugh</a>
+  </h1>
+  <nav class="flex items-center gap-4">
+    {#if path === '/about'}
+      <a href="/" class="text-indigo-600 hover:underline">Blog</a>
+    {:else}
+      <a href="/about" class="text-indigo-600 hover:underline">About</a>
+      <a
+        href="/posts/new"
+        class="rounded-md bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700"
+        >New Post</a
+      >
+    {/if}
+    <ThemeToggle />
+  </nav>
+</header>
+```
+
+src/lib/components/ThemeToggle.svelte:
+```
+<script lang="ts">
+    import { ColorSchemeContext } from "$lib/theme.svelte";
+    import type { ColorScheme } from "$lib/constants";
+
+    const color_scheme = ColorSchemeContext.get();
+
+    const schemes: { value: ColorScheme; label: string; icon: string }[] = [
+        { value: 'light', label: 'Light', icon: '☀️' },
+        { value: 'dark', label: 'Dark', icon: '🌙' },
+        { value: 'system', label: 'System', icon: '💻' },
+    ];
+
+    function toggle_theme(scheme: ColorScheme) {
+        // If the View Transitions API isn't available, just change the theme directly.
+
+        if (!document.startViewTransition) {
+            color_scheme.user = scheme;
+            return;
+        }
+
+        // Use the ViewTransitions API for a smooth animation.
+        const transition = document.startViewTransition(() => {
+            color_scheme.user = scheme;
+            document.documentElement.classList.add('in-theme-transition');
+        });
+
+        transition.finished.then(() => {
+            document.documentElement.classList.remove('in-theme-transition');
+        });
+    }
+</script>
+
+<div class="flex items-center rounded-full border border-gray-300 dark:border-gray-700 p-1">
+  {#each schemes as scheme}
+    <button
+      onclick={() => toggle_theme(scheme.value)}
+      class="flex-1 rounded-full px-3 py-1 text-sm transition-colors"
+      class:bg-gray-200={color_scheme.user === scheme.value}
+      class:dark:bg-gray-600={color_scheme.user === scheme.value}
+      class:hover:bg-gray-100={color_scheme.user !== scheme.value}
+      class:dark:hover:bg-gray-800={color_scheme.user !== scheme.value}
+      aria-label={`Switch to ${scheme.label} theme`}
+      aria-pressed={color_scheme.user === scheme.value}
+    >
+      <span class="flex items-center justify-center gap-2">
+        <span>{scheme.icon}</span>
+        <span class="hidden sm:inline">{scheme.label}</span>
+      </span>
+    </button>
+  {/each}
+</div>
+```
+
+src/routes/+layout.server.ts:
+```
+import type { LayoutServerLoad } from './$types';
+
+export const load: LayoutServerLoad = ({ locals }) => {
+    // This function takes the `shared_settings` from event.locals
+    // (which was set by the app's server hook) and returns it.
+    // This ensures it's available for the `data` prop in every page.
+    return {
+        shared_settings: locals.shared_settings
+    };
+}
 ```
 
 src/routes/+layout.svelte:
 ```
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   import '../app.css';
   import favicon from '$lib/assets/favicon.svg';
+  import type { PageData } from './$types';
+  import { ColorSchemeContext } from '$lib/theme.svelte';
 
-  let { children } = $props();
+  let { data, children }: { data: PageData; children: Snippet } = $props();
+
+  // Initialize and provide the ColorSchemeContext to the entire app.
+  // The initial value comes from the server hook via `data.shared_settings`.
+  ColorSchemeContext.set({ user: data.shared_settings.colorScheme })
 </script>
 
 <svelte:head>
@@ -597,18 +2098,15 @@ src/routes/+page.svelte:
 ```
 <script lang="ts">
   import type { PageData } from './$types';
+  import Header from '$lib/components/Header.svelte';
 
   let { data }: { data: PageData } = $props();
 </script>
 
 <div class="max-w-2xl mx-auto py-8 px-4">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-3xl font-bold">My Blog</h1>
-    <div class="flex items-center gap-4">
-      <a href="/about" class="text-indigo-600 hover:underline">About</a>
-      <a href="/posts/new" class="rounded-md bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700">New Post</a>
-    </div>
-  </div>
+  <Header />
+
+  <h2 class="text-3xl font-bold mb-8">My Blog</h2>
 
   <div class="space-y-8">
     {#each data.posts as post}
@@ -943,14 +2441,12 @@ src/routes/posts/new/+page.svelte:
 
 src/routes/about/+page.svelte:
 ```
+<script lang="ts">
+	import Header from '$lib/components/Header.svelte';
+</script>
+
 <div class="max-w-2xl mx-auto py-8 px-4">
-  <!-- Header Section -->
-  <header class="flex justify-between items-center mb-12">
-    <h1 class="text-4xl font-bold">Jamie Strausbaugh</h1>
-    <nav>
-      <a href="/" class="text-indigo-600 hover:underline">Blog</a>
-    </nav>
-  </header>
+  <Header />
 
   <!-- Main Content Section -->
   <div class="flex flex-col md:flex-row gap-8">

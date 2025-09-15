@@ -2,14 +2,29 @@
 // for information about these interfaces
 declare global {
   namespace App {
-    interface Locals {
-      user: import('$lib/server/auth').SessionValidationResult['user'];
-      session: import('$lib/server/auth').SessionValidationResult['session'];
-    }
-  } // interface Error {}
-  // interface Locals {}
-} // interface PageData {}
-// interface PageState {}
 
+    declare type ColorScheme = import('$lib/constants').ColorScheme;
+    declare type SharedSettings = {
+        colorScheme: ColorScheme;
+    };
+    interface Locals {
+        user: import('$lib/server/auth').SessionValidationResult['user'];
+        session: import('$lib/server/auth').SessionValidationResult['session'];
+        shared_settings: SharedSettings;
+        internal_referer?: URL;
+    }
+
+    interface PageData {
+        shared_settings: SharedSettings;
+    }
+  }
+  
+  interface Error {
+      code: string;
+  }
+}
+
+// interface PageState {}
 // interface Platform {}
+
 export {};
