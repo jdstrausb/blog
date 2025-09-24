@@ -4,6 +4,7 @@
   import favicon from '$lib/assets/favicon.svg';
   import type { PageData } from './$types';
   import { ColorSchemeContext } from '$lib/theme.svelte';
+  import Header from '$lib/components/Header.svelte';
 
   let { data, children }: { data: PageData; children: Snippet } = $props();
 
@@ -16,4 +17,8 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-{@render children?.()}
+<Header />
+
+<div class="pt-[var(--header-height)]">
+    {@render children?.()}
+</div>

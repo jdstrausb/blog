@@ -1,55 +1,84 @@
+/* src/app.css */
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
 /* Define CSS variables for light and dark themes */
 :root {
-  --bg-color: white;
-  --text-color: #111827; /* gray-900 */
-  --muted-color: #6b7280; /* gray-500 */
+    --bg-color: theme(colors.white);
+    --text-color: theme(colors.gray.900);
+    --muted-color: theme(colors.gray.500);
+
+    /* Component-specific variables */
+    --header-bg: theme(colors.white / 70%);
+    --header-border: theme(colors.gray.200);
+    --toggle-border: theme(colors.gray.300);
+    --toggle-active-bg: theme(colors.gray.200);
+    --toggle-inactive-hover-bg: theme(colors.gray.100);
+
+    /* NEW: PageMenu variables */
+    --link-hover-color: theme(colors.indigo.500);
+    --menu-bg: theme(colors.white);
+    --menu-border: theme(colors.gray.200);
+    --menu-item-hover-bg: theme(colors.gray.100);
+
+    --header-height: 5rem; /* 80px */
 }
 
 .dark {
-  --bg-color: #111827; /* gray-900 */
-  --text-color: #f9fafb; /* gray-50 */
-  --muted-color: #9ca3af; /* gray-400 */
+    --bg-color: theme(colors.gray.900);
+    --text-color: theme(colors.gray.50);
+    --muted-color: theme(colors.gray.400);
+
+    /* Component-specific variables */
+    --header-bg: theme(colors.gray.800 / 70%);
+    --header-border: theme(colors.gray.700);
+    --toggle-border: theme(colors.gray.700);
+    --toggle-active-bg: theme(colors.gray.600);
+    --toggle-inactive-hover-bg: theme(colors.gray.800);
+
+    /* NEW: PageMenu variables */
+    --link-hover-color: theme(colors.indigo.400);
+    --menu-bg: theme(colors.gray.800);
+    --menu-border: theme(colors.gray.700);
+    --menu-item-hover-bg: theme(colors.gray.700);
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
 }
 
 /* For View Transitions API */
 :root.in-theme-transition {
-  &::view-transition-old(root) {
-    animation-delay: 400ms;
-  }
-
-  &::view-transition-new(root) {
-    animation: circle-in 400ms var(--svelte-easing-ease-in-out);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
     &::view-transition-old(root) {
-      animation-duration: 0ms;
+        animation-delay: 400ms;
     }
 
     &::view-transition-new(root) {
-      animation-duration: 0ms;
+        animation: circle-in 400ms var(--svelte-easing-ease-in-out);
     }
-  }
+
+    @media (prefers-reduced-motion: reduce) {
+        &::view-transition-old(root) {
+            animation-duration: 0ms;
+        }
+
+        &::view-transition-new(root) {
+            animation-duration: 0ms;
+        }
+    }
 }
 
 @keyframes circle-in {
-  from {
-    clip-path: circle(0% at 100% 0%);
-  }
+    from {
+        clip-path: circle(0% at 100% 0%);
+    }
 
-  to {
-    clip-path: circle(140% at 100% 0%);
-  }
+    to {
+        clip-path: circle(140% at 100% 0%);
+    }
 }

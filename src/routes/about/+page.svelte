@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
+	import PageHeader from '$lib/components/PageHeader.svelte';
 </script>
 
 <div class="max-w-2xl mx-auto py-8 px-4">
-  <Header />
+  <PageHeader class="mb-12" />
 
   <!-- Main Content Section -->
   <div class="flex flex-col md:flex-row gap-8">

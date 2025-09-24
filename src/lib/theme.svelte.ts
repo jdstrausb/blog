@@ -33,13 +33,13 @@ export class ColorSchemeContext {
         // This effect runs whenever `this.resolved` or `this.user` changes.
         $effect(() => {
             if (typeof window !== 'undefined') {
-                // Update the class on the body to apply CSS variables.
-                // This also ensures the server-set class is correctly managed on client navigation.
-                document.body.className = this.resolved;
-                
+                // Update the class on the html element to apply CSS variables and Tailwind dark mode.
+                document.documentElement.classList.remove('light', 'dark');
+                document.documentElement.classList.add(this.resolved);
+
                 // Update the data attribute on the html element for consistency and potential JS hooks.
                 document.documentElement.dataset.colorScheme = this.resolved;
-                
+
                 // Update the cookie to persist the user's preference.
                 document.cookie = `${PUBLIC_COOKIE_NAME_COLOR_SCHEME}=${this.user}; path=/; SameSite=Lax; Secure; max-age=604800`;
             }

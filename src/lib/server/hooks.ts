@@ -94,7 +94,9 @@ function validate_color_scheme(value: string | null | undefined): ColorScheme {
 /**
  * Creates a color scheme server hook for handling theme preferences
  */
-export const create_color_scheme_server_hook = function (options: ColorSchemeServerHookOptions): Handle {
+export const create_color_scheme_server_hook = function (
+    options: ColorSchemeServerHookOptions
+): Handle {
     return async function ({ event, resolve }) {
         const { locals, cookies, url, route } = event;
         const { cookie_name, building, transform } = options;
@@ -122,10 +124,12 @@ export const create_color_scheme_server_hook = function (options: ColorSchemeSer
         if (transform === false) return resolve(event);
         const placeholder = typeof transform === 'string' ? transform : '%color-scheme%';
 
-        // const body_class = color_scheme === 'dark' ? 'dark' : '';
+        // Resolve the class for SSR. 'system' defaults to 'light'.
+        // The client will adjust if the system preference is dark.
+        const theme_class = color_scheme === 'dark' ? 'dark' : 'light';
         
         return await resolve(event, {
-            transformPageChunk: ({ html }) => html.replace(placeholder, color_scheme),
+            transformPageChunk: ({ html }) => html.replaceAll(placeholder, theme_class),
         });
     };
 };
