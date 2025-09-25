@@ -10,8 +10,6 @@ declare global {
           colorScheme: ColorScheme;
       };
       interface Locals {
-          user: import('$lib/server/auth').SessionValidationResult['user'];
-          session: import('$lib/server/auth').SessionValidationResult['session'];
           shared_settings: SharedSettings;
           internal_referer?: URL;
       }

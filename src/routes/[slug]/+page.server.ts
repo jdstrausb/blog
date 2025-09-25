@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { post, user } from '$lib/server/db/schema';
+import { post } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { marked } from 'marked';
@@ -10,11 +10,10 @@ export const load: PageServerLoad = async ({ params }) => {
     .select({
       title: post.title,
       markdown_content: post.markdownContent,
-      author: user.username,
+      author: post.author,
       created_at: post.createdAt
     })
     .from(post)
-    .innerJoin(user, eq(post.authorId, user.id))
     .where(eq(post.slug, params.slug));
 
   const blog_post = results.at(0);

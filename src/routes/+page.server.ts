@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
-import { post, user } from '$lib/server/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { post } from '$lib/server/db/schema';
+import { desc } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -9,11 +9,10 @@ export const load: PageServerLoad = async () => {
     .select({
       title: post.title,
       slug: post.slug,
-      author: user.username,
+      author: post.author,
       created_at: post.createdAt
     })
     .from(post)
-    .innerJoin(user, eq(post.authorId, user.id))
     .orderBy(desc(post.createdAt)); // Show newest posts first
 
   return { posts };

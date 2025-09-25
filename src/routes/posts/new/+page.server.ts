@@ -1,28 +1,17 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
-import type { Actions, PageServerLoad } from './$types';
-
-// This load function will run before the page loads.
-// It protects the route so only logged in users can access it.
-export const load: PageServerLoad = async (event) => {
-    if (!event.locals.user) {
-        return redirect(302, '/demo/lucia/login'); // Redirect to login page
-    }
-    return {};
-};
+import type { Actions } from './$types';
 
 export const actions: Actions = {
-    default: async ({ request, locals }) => {
-        // Ensure a user is logged in before processing the form
-        if (!locals.user) {
-            // message = 'You must be logged in to create a post.';
-            return redirect(302, '/demo/lucia/login'); // Redirect to login page
-        }
+    default: async ({ request }) => {
 
         const form_data = await request.formData();
         const title = form_data.get('title') as string;
         const markdownContent = form_data.get('content') as string;
+
+        // Define author name as a constant here for now
+        const author = 'Jamie Strausbaugh';
 
         if (!title || !markdownContent) {
             return fail(400, { message: 'Title and content are required.' });
@@ -40,7 +29,7 @@ export const actions: Actions = {
                 title,
                 slug: `${slug}-${Date.now()}`, // Ensure uniqueness by appending timestamp
                 markdownContent,
-                authorId: locals.user.id,
+                author: author,
                 createdAt: new Date()
             });
         } catch (e) {

@@ -1,62 +1,12 @@
 import type { Handle } from '@sveltejs/kit';
 import type { ColorScheme } from '$lib/constants';
 import { COLOR_SCHEMES, PUBLIC_COOKIE_CONFIG } from '$lib/constants';
-import { lucia } from '$lib/server/auth';
-
-// interface AuthServerHookOptions {
-//     lucia: typeof lucia;
-// }
 
 interface ColorSchemeServerHookOptions {
     cookie_name: string;
     building: boolean;
     transform?: boolean | string;
 }
-
-/**
- * Creates an authentication server hook for handling user sessions
- */
-export const create_auth_server_hook = function (): Handle { // options: AuthServerHookOptions
-    return async function ({ event, resolve }) {
-        const { locals, cookies } = event;
-        // const { lucia } = options;
-
-        // Get session ID from the cookie
-        const session_id = cookies.get(lucia.sessionCookieName);
-        if (!session_id) {
-            locals.user = null;
-            locals.session = null;
-            return resolve(event);
-        }
-
-        // Validate the session
-        const { session, user } = await lucia.validateSession(session_id);
-
-        // If session is fresh, create a new cookie with an updated expiration time
-        if (session?.fresh) {
-            const session_cookie = lucia.createSessionCookie(session.id);
-            cookies.set(session_cookie.name, session_cookie.value, {
-                path: '.',
-                ...session_cookie.attributes
-            });
-        }
-
-        // If session is invalid, create a blank cookie to remove the old one
-        if (!session) {
-            const session_cookie = lucia.createBlankSessionCookie();
-            cookies.set(session_cookie.name, session_cookie.value, {
-                path: '.',
-                ...session_cookie.attributes
-            });
-        }
-
-        // Make user and session available on `event.locals`
-        locals.user = user;
-        locals.session = session;
-
-        return resolve(event);
-    };
-};
 
 /**
  * Creates a referer tracking hook for internal navigation tracking
