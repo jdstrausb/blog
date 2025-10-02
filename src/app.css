@@ -16,11 +16,89 @@
     --toggle-active-bg: theme(colors.gray.200);
     --toggle-inactive-hover-bg: theme(colors.gray.100);
 
-    /* NEW: PageMenu variables */
+    /* PageMenu variables */
     --link-hover-color: theme(colors.indigo.500);
     --menu-bg: theme(colors.white);
     --menu-border: theme(colors.gray.200);
     --menu-item-hover-bg: theme(colors.gray.100);
+
+    /* Button variables */
+    --share-button-bg: theme(colors.white);
+    --share-button-hover-bg: theme(colors.gray.100);
+
+    /* Blog-specific variables */
+
+    /* Blog tags */
+    --blog-tag-bg: theme(colors.indigo.100);
+    --blog-tag-text: theme(colors.indigo.800);
+    --blog-tag-border: theme(colors.indigo.200);
+
+    /* Blog title */
+    --blog-title-color: theme(colors.gray.900);
+    --blog-meta-color: theme(colors.gray.600);
+
+    /* Blog table of contents */
+    --blog-toc-bg: theme(colors.white);
+    --blog-toc-border: theme(colors.gray.200);
+    --blog-toc-heading: theme(colors.gray.500);
+    --blog-toc-link: theme(colors.indigo.600);
+    --blog-toc-link-hover: theme(colors.indigo.500);
+
+    /* Blog Tip */
+    --blog-tip-bg: theme(colors.amber.100);
+    --blog-tip-text: theme(colors.amber.900);
+    --blog-tip-border: theme(colors.amber.300);
+    --blog-tip-inline-code-bg: theme(colors.amber.200);
+    --blog-tip-inline-code-text: theme(colors.amber.900);
+
+    /* Blog code */
+    --blog-code-bg: theme(colors.gray.50);
+    --blog-code-border: theme(colors.gray.200);
+
+    /* Blog prose headings */
+    --blog-prose-headings: theme(colors.gray.900);
+
+    /* Blog inline code */
+    --blog-inline-code-bg: theme(colors.gray.100);
+    --blog-inline-code-text: theme(colors.gray.800);
+
+    /* Blog page variables */
+    --blog-description-color: theme(colors.gray.700);
+    --blog-empty-border: theme(colors.gray.300);
+    --blog-empty-heading: theme(colors.gray.800);
+    --blog-empty-text: theme(colors.gray.600);
+
+    /* Blog post card variables */
+    --blog-card-bg: theme(colors.white);
+    --blog-card-border: theme(colors.gray.200);
+    --blog-card-shadow: theme(colors.gray.950 / 5%);
+    --blog-card-shadow-hover: theme(colors.gray.950 / 10%);
+    --blog-card-title-color: theme(colors.gray.900);
+    --blog-card-summary-color: theme(colors.gray.600);
+    --blog-card-footer-color: theme(colors.gray.500);
+    --blog-card-tag-category-color: theme(colors.indigo.600);
+
+    /* Homepage variables */
+    --homepage-title-color: theme(colors.gray.900);
+    --homepage-title-hover-color: theme(colors.indigo.600);
+    --homepage-meta-color: theme(colors.gray.600);
+    --homepage-summary-color: theme(colors.gray.700);
+    --homepage-empty-text-color: theme(colors.gray.600);
+
+    /* Navigation variables */
+    --nav-link-color: theme(colors.indigo.600);
+    --nav-link-hover-color: theme(colors.indigo.500);
+
+    /* Button variables */
+    --primary-button-bg: theme(colors.indigo.600);
+    --primary-button-hover-bg: theme(colors.indigo.500);
+    --primary-button-text: theme(colors.white);
+    --primary-button-focus-outline: theme(colors.indigo.500);
+
+    /* Scroll-to-top button variables */
+    --scroll-button-bg: theme(colors.black);
+    --scroll-button-icon: theme(colors.white);
+    --scroll-button-icon-hover: theme(colors.indigo.200);
 
     --header-height: 5rem; /* 80px */
 }
@@ -37,19 +115,97 @@
     --toggle-active-bg: theme(colors.gray.600);
     --toggle-inactive-hover-bg: theme(colors.gray.800);
 
-    /* NEW: PageMenu variables */
+    /* PageMenu variables */
     --link-hover-color: theme(colors.indigo.400);
     --menu-bg: theme(colors.gray.800);
     --menu-border: theme(colors.gray.700);
     --menu-item-hover-bg: theme(colors.gray.700);
+
+    /* Button variables */
+    --share-button-bg: theme(colors.gray.800);
+    --share-button-hover-bg: theme(colors.gray.800);
+
+    /* Blog-specific variables */
+
+    /* Blog tags */
+    --blog-tag-bg: theme(colors.indigo.950 / 40%);
+    --blog-tag-text: theme(colors.indigo.300);
+    --blog-tag-border: theme(colors.indigo.800);
+
+    /* Blog title */
+    --blog-title-color: theme(colors.white);
+    --blog-meta-color: theme(colors.gray.400);
+
+    /* Blog table of contents */
+    --blog-toc-bg: theme(colors.gray.900);
+    --blog-toc-border: theme(colors.gray.700);
+    --blog-toc-heading: theme(colors.gray.300);
+    --blog-toc-link: theme(colors.indigo.300);
+    --blog-toc-link-hover: theme(colors.indigo.200);
+
+    /* Blog Tip */
+    --blog-tip-bg: theme(colors.amber.950 / 40%);
+    --blog-tip-text: theme(colors.amber.100);
+    --blog-tip-border: theme(colors.amber.600);
+    --blog-tip-inline-code-bg: theme(colors.amber.800 / 40%);
+    --blog-tip-inline-code-text: theme(colors.amber.100);
+
+    /* Blog code */
+    --blog-code-bg: theme(colors.gray.800);
+    --blog-code-border: theme(colors.gray.700);
+
+    /* Blog prose headings */
+    --blog-prose-headings: theme(colors.white);
+
+    /* Blog inline code */
+    --blog-inline-code-bg: theme(colors.gray.800);
+    --blog-inline-code-text: theme(colors.gray.200);
+
+    /* Blog page variables */
+    --blog-description-color: theme(colors.gray.300);
+    --blog-empty-border: theme(colors.gray.700);
+    --blog-empty-heading: theme(colors.gray.200);
+    --blog-empty-text: theme(colors.gray.400);
+
+    /* Blog post card variables */
+    --blog-card-bg: theme(colors.gray.900);
+    --blog-card-border: theme(colors.gray.700);
+    --blog-card-shadow: theme(colors.black / 20%);
+    --blog-card-shadow-hover: theme(colors.black / 30%);
+    --blog-card-title-color: theme(colors.white);
+    --blog-card-summary-color: theme(colors.gray.300);
+    --blog-card-footer-color: theme(colors.gray.400);
+    --blog-card-tag-category-color: theme(colors.indigo.300);
+
+    /* Homepage variables */
+    --homepage-title-color: theme(colors.white);
+    --homepage-title-hover-color: theme(colors.indigo.300);
+    --homepage-meta-color: theme(colors.gray.400);
+    --homepage-summary-color: theme(colors.gray.300);
+    --homepage-empty-text-color: theme(colors.gray.400);
+
+    /* Navigation variables */
+    --nav-link-color: theme(colors.indigo.300);
+    --nav-link-hover-color: theme(colors.indigo.200);
+
+    /* Button variables */
+    --primary-button-bg: theme(colors.indigo.500);
+    --primary-button-hover-bg: theme(colors.indigo.400);
+    --primary-button-text: theme(colors.white);
+    --primary-button-focus-outline: theme(colors.indigo.400);
+
+    /* Scroll-to-top button variables */
+    --scroll-button-bg: theme(colors.white);
+    --scroll-button-icon: theme(colors.black);
+    --scroll-button-icon-hover: theme(colors.indigo.300);
 }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+        background-color 0.3s ease,
+        color 0.3s ease;
 }
 
 /* For View Transitions API */
@@ -81,4 +237,105 @@ body {
     to {
         clip-path: circle(140% at 100% 0%);
     }
+}
+
+/* Blog prose styling overrides */
+.prose {
+    /* Remove default Typography plugin backticks from inline code */
+    & code::before {
+        content: none;
+    }
+
+    & code::after {
+        content: none;
+    }
+
+    /* Fix heading colors and remove underlines from header links */
+    & h1,
+    & h2,
+    & h3,
+    & h4,
+    & h5,
+    & h6 {
+        color: var(--blog-prose-headings);
+
+        & a {
+            text-decoration: none;
+            color: inherit;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    /* Ensure proper text contrast */
+    & p,
+    & li {
+        color: var(--text-color);
+    }
+
+    /* Address bold and emphasis colors */
+    & strong {
+        color: var(--text-color);
+    }
+
+    & em {
+        color: var(--text-color);
+    }
+
+    /* Fix link colors */
+    & a:not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a) {
+        color: var(--blog-toc-link);
+
+        &:hover {
+            color: var(--blog-toc-link-hover);
+        }
+    }
+
+    /* Inline code styling */
+    & code:not(pre code) {
+        background-color: var(--blog-inline-code-bg);
+        color: var(--blog-inline-code-text);
+        font-family:
+            ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+        font-size: 0.875em;
+        padding: 0.125rem 0.25rem;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+}
+
+/* Tip component styling */
+.tip-container {
+    & p,
+    & li {
+        color: var(--blog-tip-text);
+    }
+}
+
+/* Tip component prose overrides */
+.prose.tip-prose {
+    & p,
+    & li,
+    & code:not(pre code) {
+        color: var(--blog-tip-text);
+    }
+
+    & strong,
+    & em {
+        color: var(--blog-tip-text);
+    }
+
+    /* Keep the inline code background styling */
+    & code:not(pre code) {
+        background-color: var(--blog-tip-inline-code-bg);
+        color: var(--blog-tip-inline-code-text);
+    }
+}
+
+/* Remove unwanted margins from Shiki code blocks */
+.prose pre.shiki {
+    margin-top: 0;
+    margin-bottom: 0;
 }

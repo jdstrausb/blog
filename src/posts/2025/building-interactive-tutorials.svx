@@ -1,0 +1,66 @@
+---
+title: "Building Interactive Tutorials"
+summary: "How to embed reusable Svelte components inside markdown lessons."
+author: "Jamie Strausbaugh"
+publishedAt: "2025-02-02"
+updatedAt: "2025-02-10"
+tags:
+  - tutorials
+  - svelte
+  - interactivity
+readingTime: 8
+published: true
+featuredImage: "$lib/assets/images/posts/tutorials/AI.jpg"
+---
+
+<script>
+  import Tip from '$lib/components/blog/Tip.svelte';
+  import CodeBlock from '$lib/components/blog/CodeBlock.svelte';
+  
+  let steps = ['Plan content', 'Author in .svx', 'Preview locally', 'Publish to production'];
+</script>
+
+# {title}
+
+Delivering interactive tutorials is now a *breeze* thanks to **MDSvex**. This post walks through best practices for embedding reusable components, table of contents, and callout blocks.
+
+## Authoring Workflow
+
+1. Create a new `.svx` file with frontmatter metadata.
+2. Import reusable components at the top of the document.
+3. Mix markdown and Svelte freely within the same file.
+
+## Callout Example
+
+<Tip title="Pro tip">
+
+  Keep components small and composable. Complex layouts can live in dedicated `.svelte` files and be reused across posts.
+
+</Tip>
+
+## Embedding Data
+
+```svelte
+<script>
+  export let steps = [];
+</script>
+
+<ol>
+  {#each steps as step}
+    <li>{step}</li>
+  {/each}
+</ol>
+```
+
+## Going Further
+
+- Use remark plugins to generate table of contents automatically.
+- Add rehype plugins for heading permalinks.
+- Combine with enhanced images for responsive media.
+
+## Resources
+
+- [MDSvex Documentation](https://mdsvex.com)
+- [SvelteKit Docs](https://kit.svelte.dev)
+
+Happy writing!

@@ -7,4 +7,4 @@ export const load: LayoutServerLoad = ({ locals }) => {
     return {
         shared_settings: locals.shared_settings
     };
-}
+};

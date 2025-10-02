@@ -52,7 +52,7 @@ export const create_color_scheme_server_hook = function (
         const { cookie_name, building, transform } = options;
 
         // Get the raw value and validate it
-        const raw_color_scheme = 
+        const raw_color_scheme =
             (!building && url.searchParams.get('color-scheme')) ||
             cookies.get(cookie_name) ||
             'system';
@@ -60,10 +60,10 @@ export const create_color_scheme_server_hook = function (
         const color_scheme = validate_color_scheme(raw_color_scheme);
 
         locals.shared_settings = {
-            colorScheme: color_scheme,
+            colorScheme: color_scheme
         };
 
-        // setting cookies  
+        // setting cookies
         cookies.set(cookie_name, color_scheme, PUBLIC_COOKIE_CONFIG);
 
         // return early if fetching api routes
@@ -77,9 +77,9 @@ export const create_color_scheme_server_hook = function (
         // Resolve the class for SSR. 'system' defaults to 'light'.
         // The client will adjust if the system preference is dark.
         const theme_class = color_scheme === 'dark' ? 'dark' : 'light';
-        
+
         return await resolve(event, {
-            transformPageChunk: ({ html }) => html.replaceAll(placeholder, theme_class),
+            transformPageChunk: ({ html }) => html.replaceAll(placeholder, theme_class)
         });
     };
 };

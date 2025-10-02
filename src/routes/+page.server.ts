@@ -1,19 +1,10 @@
-import { db } from '$lib/server/db';
-import { post } from '$lib/server/db/schema';
-import { desc } from 'drizzle-orm';
+import { load_all_posts } from '$lib/utils/posts.server';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-  // Query posts and join with the user table to get author's username
-  const posts = await db
-    .select({
-      title: post.title,
-      slug: post.slug,
-      author: post.author,
-      created_at: post.createdAt
-    })
-    .from(post)
-    .orderBy(desc(post.createdAt)); // Show newest posts first
+    const posts = await load_all_posts();
 
-  return { posts };
+    return {
+        posts: posts.slice(0, 3)
+    };
 };
