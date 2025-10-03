@@ -108,29 +108,71 @@
               href: platform.buildShareUrl(createTrackedUrl(platform.id, canonicalUrl), postTitle)
           }))
         : [];
+
+    // Copy button state
+    let copied = $state(false);
+    let copyTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    const linkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor" aria-hidden="true" width="20" height="20"><path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg>`;
+    const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true" width="20" height="20"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>`;
+
+    async function handleCopy() {
+        if (!canonicalUrl) return;
+
+        try {
+            await navigator.clipboard.writeText(canonicalUrl);
+            copied = true;
+
+            // Track copy event
+            window.umami?.track('Share', {
+                platform: 'Copy Link',
+                post: postTitle
+            });
+
+            // Clear existing timeout if any
+            if (copyTimeoutId) {
+                clearTimeout(copyTimeoutId);
+            }
+
+            // Reset after 3 seconds
+            copyTimeoutId = setTimeout(() => {
+                copied = false;
+                copyTimeoutId = null;
+            }, 3000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    }
 </script>
 
 {#if renderedPlatforms.length}
-    <div class="mt-12 border-t border-gray-200 pt-6 dark:border-gray-700">
-        <h2
-            class="mb-4 text-sm font-semibold tracking-wide text-gray-500 uppercase dark:text-gray-400"
+  <div class="mx-4 my-6 max-w-4xl rounded-xl border border-[var(--share-section-border)] bg-gradient-to-br from-[var(--share-section-bg-start)] to-[var(--share-section-bg-end)] px-6 py-8 text-center mb-12 sm:mx-auto">
+    <h2 class="mb-4 text-xl font-semibold tracking-wide text-[var(--text-color)]">
+        Share this post
+    </h2>
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+        {#each renderedPlatforms as platform}
+            <a
+                class="flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
+                href={platform.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Share on ${platform.label}`}
+                onclick={withTracking(platform.label)}
+            >
+                <span class="h-5 w-5 flex-shrink-0" aria-hidden="true">{@html platform.icon}</span>
+                <span class="text-xs sm:text-sm">{platform.label}</span>
+            </a>
+        {/each}
+        <button
+            type="button"
+            class="flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
+            onclick={handleCopy}
+            aria-label={copied ? 'Link copied!' : 'Copy link to clipboard'}
         >
-            Share this post
-        </h2>
-        <div class="flex flex-wrap gap-3">
-            {#each renderedPlatforms as platform}
-                <a
-                    class="flex items-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--muted-color)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
-                    href={platform.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Share on ${platform.label}`}
-                    onclick={withTracking(platform.label)}
-                >
-                    <span class="h-5 w-5" aria-hidden="true">{@html platform.icon}</span>
-                    <span>{platform.label}</span>
-                </a>
-            {/each}
-        </div>
+            <span class="h-5 w-5 flex-shrink-0" aria-hidden="true">{@html copied ? checkIcon : linkIcon}</span>
+            <span class="text-xs sm:text-sm">{copied ? 'Copied!' : 'Copy'}</span>
+        </button>
     </div>
+  </div>
 {/if}

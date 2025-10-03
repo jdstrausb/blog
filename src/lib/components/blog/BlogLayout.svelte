@@ -1,6 +1,7 @@
 <script lang="ts">
     import TableOfContents from './TableOfContents.svelte';
     import Breadcrumb from './Breadcrumb.svelte';
+    import ShareWidget from './ShareWidget.svelte';
     import ScrollToTopButton from './ScrollToTopButton.svelte';
     import type { Picture } from 'vite-imagetools';
     import { getEnhancedImage } from '$lib/utils/enhanced-images.client';
@@ -14,6 +15,7 @@
         tags?: string[];
         readingTime?: number;
         featuredImage?: string | undefined; // Now always a string from server
+        slug?: string;
         children?: import('svelte').Snippet;
     }
 
@@ -26,6 +28,7 @@
         tags = [],
         readingTime = 0,
         featuredImage = undefined,
+        slug = '',
         children
     }: Props = $props();
 
@@ -143,6 +146,14 @@
         </aside>
     </div>
 </article>
+
+<section class="share-section">
+    <ShareWidget postTitle={title} postSlug={slug} />
+</section>
+
+<section class="feedback-section">
+
+</section>
 
 <!-- Scroll to Top Button -->
 <ScrollToTopButton />

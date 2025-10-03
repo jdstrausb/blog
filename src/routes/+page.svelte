@@ -9,13 +9,13 @@
 <div class="mx-auto max-w-2xl px-4 py-8">
     <PageHeader class="mb-12" />
 
-    <h2 class="mb-8 text-3xl font-bold text-[var(--text-color)]">My Blog</h2>
+    <h2 class="mb-8 font-serif text-3xl font-bold text-[var(--text-color)]">My Blog</h2>
 
     <div class="space-y-8">
         {#each data.posts as post}
             <article>
                 <h3
-                    class="text-2xl font-semibold text-[var(--homepage-title-color)] hover:text-[var(--homepage-title-hover-color)]"
+                    class="font-serif text-2xl font-semibold text-[var(--homepage-title-color)] hover:text-[var(--homepage-title-hover-color)]"
                 >
                     <a href={`/blog/${post.slug}`}>{post.title}</a>
                 </h3>

@@ -36,11 +36,26 @@
         }
     };
 
+    // dark themes
+    /* 
+      - github-dark
+      - vitesse-black
+      - vitesse-dark
+    */
+
+    // light themes
+    /* 
+      - github-light
+      - vitesse-light
+    */
+
+
     const highlightCode = async () => {
         if (!highlighter || !code || !language) return;
 
+
         try {
-            const theme = colorScheme.resolved === 'dark' ? 'github-dark' : 'github-light';
+            const theme = colorScheme.resolved === 'dark' ? 'vitesse-dark' : 'vitesse-light';
             const html = highlighter.codeToHtml(code, {
                 lang: language,
                 theme
@@ -57,7 +72,7 @@
         if (browser && code && language) {
             try {
                 highlighter = await createHighlighter({
-                    themes: ['github-dark', 'github-light'],
+                    themes: ['vitesse-dark', 'vitesse-light'],
                     langs: [
                         'javascript',
                         'typescript',

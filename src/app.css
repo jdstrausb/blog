@@ -1,203 +1,211 @@
-/* src/app.css */
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-/* Define CSS variables for light and dark themes */
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+
+/* Tailwind v4 custom font definitions */
+@theme {
+    --font-serif: 'Source Serif 4', Georgia, serif;
+}
+
+/*
+  Vitesse-based Color Scheme
+  This system defines a core palette and then maps it to component-specific variables.
+*/
 :root {
-    --bg-color: theme(colors.white);
-    --text-color: theme(colors.gray.900);
-    --muted-color: theme(colors.gray.500);
+    /* Core Vitesse Light Palette */
+    --v-bg: #ffffff;
+    --v-bg-soft: #f7f7f7;
+    --v-border: #f0f0f0;
+    --v-text: #393a34;
+    --v-text-muted: #6a737d;
+    --v-primary: #1c6b48; /* Vitesse's green/teal accent */
+    --v-primary-text: #ffffff;
+    --v-warning: #a65e2b;
+    --v-shadow-color: #222222;
+
+    /* General variables mapped to the Vitesse palette */
+    --bg-color: var(--v-bg);
+    --text-color: var(--v-text);
+    --muted-color: var(--v-text-muted);
 
     /* Component-specific variables */
-    --header-bg: theme(colors.white / 70%);
-    --header-border: theme(colors.gray.200);
-    --toggle-border: theme(colors.gray.300);
-    --toggle-active-bg: theme(colors.gray.200);
-    --toggle-inactive-hover-bg: theme(colors.gray.100);
+    --header-bg: color-mix(in srgb, var(--v-bg), transparent 30%); /* Equivalent to 70% opacity */
+    --header-border: var(--v-border);
+    --toggle-border: var(--v-border);
+    --toggle-active-bg: var(--v-bg-soft);
+    --toggle-inactive-hover-bg: var(--v-bg-soft);
 
     /* PageMenu variables */
-    --link-hover-color: theme(colors.indigo.500);
-    --menu-bg: theme(colors.white);
-    --menu-border: theme(colors.gray.200);
-    --menu-item-hover-bg: theme(colors.gray.100);
+    --link-hover-color: var(--v-primary);
+    --menu-bg: var(--v-bg);
+    --menu-border: var(--v-border);
+    --menu-item-hover-bg: var(--v-bg-soft);
 
     /* Button variables */
-    --share-button-bg: theme(colors.white);
-    --share-button-hover-bg: theme(colors.gray.100);
+    --share-button-bg: var(--v-bg);
+    --share-button-hover-bg: var(--v-bg-soft);
 
     /* Blog-specific variables */
 
-    /* Blog tags */
-    --blog-tag-bg: theme(colors.indigo.100);
-    --blog-tag-text: theme(colors.indigo.800);
-    --blog-tag-border: theme(colors.indigo.200);
+    /* Blog tags (using primary accent) */
+    --blog-tag-bg: color-mix(in srgb, var(--v-primary), transparent 85%);
+    --blog-tag-text: var(--v-primary);
+    --blog-tag-border: color-mix(in srgb, var(--v-primary), transparent 75%);
 
     /* Blog title */
-    --blog-title-color: theme(colors.gray.900);
-    --blog-meta-color: theme(colors.gray.600);
+    --blog-title-color: var(--v-text);
+    --blog-meta-color: var(--v-text-muted);
 
     /* Blog table of contents */
-    --blog-toc-bg: theme(colors.white);
-    --blog-toc-border: theme(colors.gray.200);
-    --blog-toc-heading: theme(colors.gray.500);
-    --blog-toc-link: theme(colors.indigo.600);
-    --blog-toc-link-hover: theme(colors.indigo.500);
+    --blog-toc-bg: var(--v-bg);
+    --blog-toc-border: var(--v-border);
+    --blog-toc-heading: var(--v-text-muted);
+    --blog-toc-link: var(--v-primary);
+    --blog-toc-link-hover: var(--v-primary);
 
-    /* Blog Tip */
-    --blog-tip-bg: theme(colors.amber.100);
-    --blog-tip-text: theme(colors.amber.900);
-    --blog-tip-border: theme(colors.amber.300);
-    --blog-tip-inline-code-bg: theme(colors.amber.200);
-    --blog-tip-inline-code-text: theme(colors.amber.900);
+    /* Blog Tip (using warning color) */
+    --blog-tip-bg: color-mix(in srgb, var(--v-warning), transparent 90%);
+    --blog-tip-text: var(--v-warning);
+    --blog-tip-border: color-mix(in srgb, var(--v-warning), transparent 70%);
+    --blog-tip-inline-code-bg: color-mix(in srgb, var(--v-warning), transparent 80%);
+    --blog-tip-inline-code-text: var(--v-warning);
 
     /* Blog code */
-    --blog-code-bg: theme(colors.gray.50);
-    --blog-code-border: theme(colors.gray.200);
+    --blog-code-bg: var(--v-bg-soft);
+    --blog-code-border: var(--v-border);
 
     /* Blog prose headings */
-    --blog-prose-headings: theme(colors.gray.900);
+    --blog-prose-headings: var(--v-text);
+
+    /* Typography */
+    --font-serif: 'Source Serif 4', Georgia, serif;
 
     /* Blog inline code */
-    --blog-inline-code-bg: theme(colors.gray.100);
-    --blog-inline-code-text: theme(colors.gray.800);
+    --blog-inline-code-bg: var(--v-bg-soft);
+    --blog-inline-code-text: var(--v-text);
 
     /* Blog page variables */
-    --blog-description-color: theme(colors.gray.700);
-    --blog-empty-border: theme(colors.gray.300);
-    --blog-empty-heading: theme(colors.gray.800);
-    --blog-empty-text: theme(colors.gray.600);
+    --blog-description-color: var(--v-text-muted);
+    --blog-empty-border: var(--v-border);
+    --blog-empty-heading: var(--v-text);
+    --blog-empty-text: var(--v-text-muted);
 
     /* Blog post card variables */
-    --blog-card-bg: theme(colors.white);
-    --blog-card-border: theme(colors.gray.200);
-    --blog-card-shadow: theme(colors.gray.950 / 5%);
-    --blog-card-shadow-hover: theme(colors.gray.950 / 10%);
-    --blog-card-title-color: theme(colors.gray.900);
-    --blog-card-summary-color: theme(colors.gray.600);
-    --blog-card-footer-color: theme(colors.gray.500);
-    --blog-card-tag-category-color: theme(colors.indigo.600);
+    --blog-card-bg: var(--v-bg);
+    --blog-card-border: var(--v-border);
+    --blog-card-shadow: color-mix(in srgb, var(--v-shadow-color), transparent 95%);
+    --blog-card-shadow-hover: color-mix(in srgb, var(--v-shadow-color), transparent 90%);
+    --blog-card-title-color: var(--v-text);
+    --blog-card-summary-color: var(--v-text-muted);
+    --blog-card-footer-color: var(--v-text-muted);
+    --blog-card-tag-category-color: var(--v-primary);
 
     /* Homepage variables */
-    --homepage-title-color: theme(colors.gray.900);
-    --homepage-title-hover-color: theme(colors.indigo.600);
-    --homepage-meta-color: theme(colors.gray.600);
-    --homepage-summary-color: theme(colors.gray.700);
-    --homepage-empty-text-color: theme(colors.gray.600);
+    --homepage-title-color: var(--v-text);
+    --homepage-title-hover-color: var(--v-primary);
+    --homepage-meta-color: var(--v-text-muted);
+    --homepage-summary-color: var(--v-text-muted);
+    --homepage-empty-text-color: var(--v-text-muted);
 
     /* Navigation variables */
-    --nav-link-color: theme(colors.indigo.600);
-    --nav-link-hover-color: theme(colors.indigo.500);
+    --nav-link-color: var(--v-primary);
+    --nav-link-hover-color: var(--v-primary);
 
     /* Button variables */
-    --primary-button-bg: theme(colors.indigo.600);
-    --primary-button-hover-bg: theme(colors.indigo.500);
-    --primary-button-text: theme(colors.white);
-    --primary-button-focus-outline: theme(colors.indigo.500);
+    --primary-button-bg: var(--v-primary);
+    --primary-button-hover-bg: color-mix(in srgb, var(--v-primary), var(--v-text) 10%);
+    --primary-button-text: var(--v-primary-text);
+    --primary-button-focus-outline: var(--v-primary);
 
     /* Scroll-to-top button variables */
-    --scroll-button-bg: theme(colors.black);
-    --scroll-button-icon: theme(colors.white);
-    --scroll-button-icon-hover: theme(colors.indigo.200);
+    --scroll-button-bg: var(--v-text);
+    --scroll-button-icon: var(--v-bg);
+    --scroll-button-icon-hover: var(--v-primary);
+
+    /* Share section variables */
+    --share-section-bg-start: hsl(210, 40%, 98%);
+    --share-section-bg-end: #f1f5f9;
+    --share-section-border: var(--v-border);
 
     --header-height: 5rem; /* 80px */
 }
 
 .dark {
-    --bg-color: theme(colors.gray.900);
-    --text-color: theme(colors.gray.50);
-    --muted-color: theme(colors.gray.400);
+    /* Core Vitesse Black Palette */
+    --v-bg: #000000;
+    --v-bg-soft: #121212;
+    --v-border: #191919;
+    --v-text: #dbd7ca;
+    --v-text-muted: #959da5;
+    --v-primary: #4d9375;
+    --v-primary-text: #000000;
+    --v-warning: #d4976c;
+    --v-shadow-color: #000000;
+    --v-button-bg-blue: #6394BF;
+    --v-button-bg-hover: #4d9375;
+
+    /* General variables are automatically updated via the core palette */
 
     /* Component-specific variables */
-    --header-bg: theme(colors.gray.800 / 70%);
-    --header-border: theme(colors.gray.700);
-    --toggle-border: theme(colors.gray.700);
-    --toggle-active-bg: theme(colors.gray.600);
-    --toggle-inactive-hover-bg: theme(colors.gray.800);
+    --header-bg: color-mix(in srgb, var(--v-bg-soft), transparent 30%);
+    --toggle-active-bg: color-mix(in srgb, var(--v-text), transparent 85%);
+    --toggle-inactive-hover-bg: var(--v-bg-soft);
 
     /* PageMenu variables */
-    --link-hover-color: theme(colors.indigo.400);
-    --menu-bg: theme(colors.gray.800);
-    --menu-border: theme(colors.gray.700);
-    --menu-item-hover-bg: theme(colors.gray.700);
+    --menu-bg: var(--v-bg-soft);
+    --menu-item-hover-bg: color-mix(in srgb, var(--v-text), transparent 90%);
 
     /* Button variables */
-    --share-button-bg: theme(colors.gray.800);
-    --share-button-hover-bg: theme(colors.gray.800);
-
-    /* Blog-specific variables */
+    --share-button-text: #292825;
+    --share-button-bg: var(--v-button-bg-blue);
+    --share-button-hover-bg: var(--v-button-bg-hover);
 
     /* Blog tags */
-    --blog-tag-bg: theme(colors.indigo.950 / 40%);
-    --blog-tag-text: theme(colors.indigo.300);
-    --blog-tag-border: theme(colors.indigo.800);
+    --blog-tag-bg: color-mix(in srgb, var(--v-primary), transparent 80%);
+    --blog-tag-text: var(--v-primary);
+    --blog-tag-border: color-mix(in srgb, var(--v-primary), transparent 70%);
 
     /* Blog title */
-    --blog-title-color: theme(colors.white);
-    --blog-meta-color: theme(colors.gray.400);
+    --blog-title-color: var(--v-text);
 
     /* Blog table of contents */
-    --blog-toc-bg: theme(colors.gray.900);
-    --blog-toc-border: theme(colors.gray.700);
-    --blog-toc-heading: theme(colors.gray.300);
-    --blog-toc-link: theme(colors.indigo.300);
-    --blog-toc-link-hover: theme(colors.indigo.200);
+    --blog-toc-bg: var(--v-bg);
 
     /* Blog Tip */
-    --blog-tip-bg: theme(colors.amber.950 / 40%);
-    --blog-tip-text: theme(colors.amber.100);
-    --blog-tip-border: theme(colors.amber.600);
-    --blog-tip-inline-code-bg: theme(colors.amber.800 / 40%);
-    --blog-tip-inline-code-text: theme(colors.amber.100);
-
-    /* Blog code */
-    --blog-code-bg: theme(colors.gray.800);
-    --blog-code-border: theme(colors.gray.700);
+    --blog-tip-bg: color-mix(in srgb, var(--v-warning), transparent 85%);
+    --blog-tip-text: var(--v-warning);
+    --blog-tip-border: color-mix(in srgb, var(--v-warning), transparent 70%);
+    --blog-tip-inline-code-bg: color-mix(in srgb, var(--v-warning), transparent 80%);
+    --blog-tip-inline-code-text: var(--v-warning);
 
     /* Blog prose headings */
-    --blog-prose-headings: theme(colors.white);
+    --blog-prose-headings: var(--v-text);
 
     /* Blog inline code */
-    --blog-inline-code-bg: theme(colors.gray.800);
-    --blog-inline-code-text: theme(colors.gray.200);
-
-    /* Blog page variables */
-    --blog-description-color: theme(colors.gray.300);
-    --blog-empty-border: theme(colors.gray.700);
-    --blog-empty-heading: theme(colors.gray.200);
-    --blog-empty-text: theme(colors.gray.400);
+    --blog-inline-code-bg: var(--v-bg-soft);
+    --blog-inline-code-text: var(--v-text);
 
     /* Blog post card variables */
-    --blog-card-bg: theme(colors.gray.900);
-    --blog-card-border: theme(colors.gray.700);
-    --blog-card-shadow: theme(colors.black / 20%);
-    --blog-card-shadow-hover: theme(colors.black / 30%);
-    --blog-card-title-color: theme(colors.white);
-    --blog-card-summary-color: theme(colors.gray.300);
-    --blog-card-footer-color: theme(colors.gray.400);
-    --blog-card-tag-category-color: theme(colors.indigo.300);
-
-    /* Homepage variables */
-    --homepage-title-color: theme(colors.white);
-    --homepage-title-hover-color: theme(colors.indigo.300);
-    --homepage-meta-color: theme(colors.gray.400);
-    --homepage-summary-color: theme(colors.gray.300);
-    --homepage-empty-text-color: theme(colors.gray.400);
-
-    /* Navigation variables */
-    --nav-link-color: theme(colors.indigo.300);
-    --nav-link-hover-color: theme(colors.indigo.200);
+    --blog-card-bg: var(--v-bg);
+    --blog-card-shadow: color-mix(in srgb, var(--v-shadow-color), transparent 80%);
+    --blog-card-shadow-hover: color-mix(in srgb, var(--v-shadow-color), transparent 70%);
+    --blog-card-title-color: var(--v-text);
 
     /* Button variables */
-    --primary-button-bg: theme(colors.indigo.500);
-    --primary-button-hover-bg: theme(colors.indigo.400);
-    --primary-button-text: theme(colors.white);
-    --primary-button-focus-outline: theme(colors.indigo.400);
+    --primary-button-hover-bg: color-mix(in srgb, var(--v-primary), var(--v-text) 10%);
+    --primary-button-text: var(--v-primary-text);
 
     /* Scroll-to-top button variables */
-    --scroll-button-bg: theme(colors.white);
-    --scroll-button-icon: theme(colors.black);
-    --scroll-button-icon-hover: theme(colors.indigo.300);
+    --scroll-button-bg: var(--v-text);
+    --scroll-button-icon: var(--v-bg);
+
+    /* Share section variables */
+    --share-section-bg-start: #1a1a1a;
+    --share-section-bg-end: #0f0f0f;
+    --share-section-border: var(--v-border);
 }
 
 body {
@@ -208,7 +216,7 @@ body {
         color 0.3s ease;
 }
 
-/* For View Transitions API */
+/* For View Transitions API - no changes needed */
 :root.in-theme-transition {
     &::view-transition-old(root) {
         animation-delay: 400ms;
@@ -239,7 +247,7 @@ body {
     }
 }
 
-/* Blog prose styling overrides */
+/* Blog prose styling overrides - updated to use new variables */
 .prose {
     /* Remove default Typography plugin backticks from inline code */
     & code::before {
@@ -258,6 +266,7 @@ body {
     & h5,
     & h6 {
         color: var(--blog-prose-headings);
+        font-family: var(--font-serif);
 
         & a {
             text-decoration: none;

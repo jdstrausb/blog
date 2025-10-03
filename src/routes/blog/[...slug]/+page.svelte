@@ -50,7 +50,8 @@
         updatedAt: data.post.updatedAt,
         tags: data.post.tags,
         readingTime: data.post.readingTime,
-        featuredImage: data.post.featuredImage
+        featuredImage: data.post.featuredImage,
+        slug: data.post.slug
     };
 </script>
 
