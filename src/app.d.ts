@@ -32,6 +32,17 @@ declare global {
             track: (event: string, data: Record<string, string>) => void;
         };
     }
+
+    export type FeedbackType = 'positive' | 'negative';
+
+    export interface FeedbackSubmission {
+        postTitle: string;
+        postSlug: string;
+        feedbackType: FeedbackType;
+        name?: string;
+        email?: string;
+        message: string;
+    }
 }
 
 // interface PageState {}

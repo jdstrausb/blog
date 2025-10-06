@@ -2,6 +2,8 @@
     import TableOfContents from './TableOfContents.svelte';
     import Breadcrumb from './Breadcrumb.svelte';
     import ShareWidget from './ShareWidget.svelte';
+    import FeedbackWidget from './FeedbackWidget.svelte';
+    import Footer from './Footer.svelte';
     import ScrollToTopButton from './ScrollToTopButton.svelte';
     import type { Picture } from 'vite-imagetools';
     import { getEnhancedImage } from '$lib/utils/enhanced-images.client';
@@ -151,9 +153,14 @@
     <ShareWidget postTitle={title} postSlug={slug} />
 </section>
 
-<section class="feedback-section">
+<!-- <hr class="my-8 border-t border-[var(--muted-color)]" /> -->
 
+<section class="feedback-section">
+    <FeedbackWidget postTitle={title} postSlug={slug} />
 </section>
+
+<!-- Footer provides spacing for ScrollToTopButton -->
+<Footer />
 
 <!-- Scroll to Top Button -->
 <ScrollToTopButton />
