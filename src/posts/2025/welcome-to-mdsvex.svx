@@ -21,8 +21,6 @@ featuredImage: "$lib/assets/images/posts/mdsvex/franny-glass-01092022.png"
   const increment = () => count += 1;
 </script>
 
-# {title}
-
 Welcome to the evolved authoring experience. All future posts now live inside `.svx` files, giving writers the ability to mix markdown with Svelte.
 
 ## Why MDSvex?

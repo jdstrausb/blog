@@ -14,8 +14,6 @@ published: true
   import CodeBlock from '$lib/components/blog/CodeBlock.svelte';
 </script>
 
-# {title}
-
 This is a test post to verify our enhanced code blocks work properly with dynamic theming.
 
 ## Standard Markdown Code Block

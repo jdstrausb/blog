@@ -51,7 +51,9 @@
         tags: data.post.tags,
         readingTime: data.post.readingTime,
         featuredImage: data.post.featuredImage,
-        slug: data.post.slug
+        slug: data.post.slug,
+        wordCount: data.post.wordCount,
+        authorAvatar: data.post.authorAvatar
     };
 </script>
 

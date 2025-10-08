@@ -18,6 +18,8 @@
         readingTime?: number;
         featuredImage?: string | undefined; // Now always a string from server
         slug?: string;
+        wordCount?: number;
+        authorAvatar?: string;
         children?: import('svelte').Snippet;
     }
 
@@ -31,6 +33,8 @@
         readingTime = 0,
         featuredImage = undefined,
         slug = '',
+        wordCount = undefined,
+        authorAvatar = undefined,
         children
     }: Props = $props();
 
@@ -63,6 +67,32 @@
                   day: 'numeric'
               })
             : undefined;
+
+    // Format publication date as "Month YYYY"
+    const formatPublicationDate = (date?: Date): string => {
+        if (!date || Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long'
+        });
+    };
+
+    // Check if updated date should be shown (more than 1 day difference from published)
+    const shouldShowUpdatedDate = $derived.by(() => {
+        if (!publishedDate || !updatedDate) return false;
+        const diffMs = updatedDate.getTime() - publishedDate.getTime();
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+        return diffDays > 1;
+    });
+
+    // Format word count display
+    const formatWordCount = (count?: number): string => {
+        if (!count) return '';
+        return `~${count} words`;
+    };
+
+    // Resolve author avatar with fallback
+    const resolvedAuthorAvatar = $derived(authorAvatar || '/authors/default-avatar.svg');
 </script>
 
 <svelte:head>
@@ -81,69 +111,132 @@
     <meta property="og:type" content="article" />
 </svelte:head>
 
-<article class="mx-auto max-w-6xl px-4 py-10 lg:py-16">
-    <header class="mb-12 border-b border-gray-200 pb-6 dark:border-gray-700">
+<article class="mx-auto max-w-[var(--article-max-width)] px-[var(--article-padding-x-mobile)] md:px-[var(--article-padding-x-tablet)] lg:px-[var(--article-padding-x-desktop)] py-8 md:py-12">
+    <!-- Header Section: Breadcrumb → Title → Summary → Featured Image → Metadata -->
+    <header class="mb-10 space-y-6 md:space-y-8">
         <!-- Breadcrumb Navigation -->
         <Breadcrumb {title} />
 
-        {#if tags?.length}
-            <div
-                class="mb-4 flex flex-wrap gap-2 text-xs tracking-wide text-[var(--blog-tag-text)] uppercase"
-            >
-                {#each tags as tag}
-                    <span
-                        class="rounded-full border border-[var(--blog-tag-border)] bg-[var(--blog-tag-bg)] px-2 py-1 text-[var(--blog-tag-text)]"
-                        >{tag}</span
-                    >
-                {/each}
-            </div>
-        {/if}
-
+        <!-- Article Title (H1) - Single Display -->
         {#if title}
-            <h1 class="text-4xl font-extrabold tracking-tight text-[var(--blog-title-color)]">
+            <h1 class="font-[family-name:var(--font-serif)] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--blog-title-color)] leading-tight">
                 {title}
             </h1>
         {/if}
 
-        <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-[var(--blog-meta-color)]">
-            {#if author}
-                <span>By {author}</span>
-            {/if}
-            {#if publishedDate}
-                <span>• Published {formatted(publishedDate)}</span>
-            {/if}\
-            {#if updatedDate}
-                <span>• Updated {formatted(updatedDate)}</span>
-            {/if}
-            {#if readingTime}
-                <span>• {readingTime} min read</span>
-            {/if}
-        </div>
-    </header>
+        <!-- Article Summary/Subtitle -->
+        {#if summary}
+            <p class="text-lg md:text-xl text-[var(--blog-description-color)] leading-relaxed">
+                {summary}
+            </p>
+        {/if}
 
-    <div class="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
-        <div>
-            {#if resolvedFeaturedImage}
-                {@const resolved = resolvedFeaturedImage}
-                <div class="mb-8 overflow-hidden rounded-lg">
-                    {#if typeof resolved === 'string'}
-                        <img
-                            src={resolved}
-                            alt={title}
-                            class="h-auto w-full object-cover"
-                            loading="lazy"
-                        />
-                    {:else}
-                        <enhanced:img src={resolved} alt={title} class="w-full" />
-                    {/if}
+        <!-- Featured Image -->
+        {#if resolvedFeaturedImage}
+            {@const resolved = resolvedFeaturedImage}
+            <div class="overflow-hidden">
+                {#if typeof resolved === 'string'}
+                    <img
+                        src={resolved}
+                        alt={title}
+                        class="h-auto w-full object-cover"
+                        loading="lazy"
+                    />
+                {:else}
+                    <enhanced:img src={resolved} alt={title} class="w-full" />
+                {/if}
+            </div>
+        {/if}
+
+        <!-- Metadata Section -->
+        <div class="space-y-4 md:space-y-6">
+            <!-- Tags Row (Right-aligned pills) -->
+            {#if tags?.length}
+                <ul class="flex flex-wrap items-center justify-end gap-2">
+                    {#each tags as tag}
+                        {@const tagSlug = tag.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}
+                        <li>
+                            <a
+                                href="/blog/categories/{tagSlug}"
+                                class="inline-block rounded-[var(--tag-pill-radius)] border border-[var(--tag-pill-border)] bg-[var(--tag-pill-bg)] px-[var(--tag-pill-padding-x)] py-[var(--tag-pill-padding-y)] text-xs font-medium uppercase tracking-wide text-[var(--tag-pill-text)] transition-colors hover:brightness-110"
+                                aria-label="View posts in {tag} category"
+                            >
+                                {tag}
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
+
+            <!-- Author Info Row -->
+            {#if author}
+                <div class="flex items-center gap-3">
+                    <img
+                        src={resolvedAuthorAvatar}
+                        alt={author}
+                        class="h-[var(--author-avatar-size)] w-[var(--author-avatar-size)] rounded-full object-cover"
+                        onerror={(e) => { (e.currentTarget as HTMLImageElement).src = '/authors/default-avatar.svg'; }}
+                    />
+                    <div class="flex flex-col">
+                        <p class="font-[var(--author-name-weight)] text-[var(--text-color)]">
+                            {author}
+                        </p>
+                        <p class="text-sm text-[var(--author-title-color)]">
+                            Developer, administrator
+                        </p>
+                    </div>
                 </div>
             {/if}
 
+            <!-- Horizontal Border -->
+            <div class="h-px w-full bg-[var(--metadata-border-color)]"></div>
+
+            <!-- Reading Stats & Publication Date Row -->
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 text-sm text-[var(--metadata-text-subtle)]">
+                <!-- Left: Reading Stats -->
+                <div class="flex flex-col gap-1">
+                    <p>
+                        {#if readingTime}
+                            {readingTime} min read{#if wordCount}, {formatWordCount(wordCount)}{/if}
+                        {:else if wordCount}
+                            {formatWordCount(wordCount)}
+                        {/if}
+                    </p>
+                </div>
+
+                <!-- Right: Publication Date -->
+                <div class="flex flex-col gap-1 sm:text-right">
+                    {#if publishedDate}
+                        <p class="capitalize">
+                            {formatPublicationDate(publishedDate)}
+                        </p>
+                    {/if}
+                    {#if shouldShowUpdatedDate && updatedDate}
+                        <p class="text-xs">
+                            Updated {formatPublicationDate(updatedDate)}
+                        </p>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Table of Contents (Mobile/Tablet - Below Metadata) -->
+    <div class="lg:hidden mb-8">
+        <TableOfContents {articleContainer} />
+    </div>
+
+    <!-- Content Section with Desktop TOC Sidebar -->
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)]">
+        <!-- Article Content -->
+        <div class="min-w-0 overflow-hidden">
             <div class="prose prose-lg max-w-none dark:prose-invert" bind:this={articleContainer}>
                 {@render children?.()}
             </div>
         </div>
-        <aside class="self-start lg:sticky lg:top-24">
+
+        <!-- Table of Contents (Desktop - Sidebar) -->
+        <aside class="hidden lg:block self-start lg:sticky lg:top-24">
             <TableOfContents {articleContainer} />
         </aside>
     </div>

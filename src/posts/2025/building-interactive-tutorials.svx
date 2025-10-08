@@ -20,8 +20,6 @@ featuredImage: "$lib/assets/images/posts/tutorials/AI.jpg"
   let steps = ['Plan content', 'Author in .svx', 'Preview locally', 'Publish to production'];
 </script>
 
-# {title}
-
 Delivering interactive tutorials is now a *breeze* thanks to **MDSvex**. This post walks through best practices for embedding reusable components, table of contents, and callout blocks.
 
 ## Authoring Workflow
