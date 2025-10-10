@@ -166,7 +166,7 @@
         {/each}
         <button
             type="button"
-            class="flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
+            class="cursor-pointer flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
             onclick={handleCopy}
             aria-label={copied ? 'Link copied!' : 'Copy link to clipboard'}
         >

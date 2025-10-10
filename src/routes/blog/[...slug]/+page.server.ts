@@ -3,6 +3,7 @@ import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { PUBLIC_BASE_URL } from '$env/static/public';
 import { sendFeedbackEmail } from '$lib/server/email';
+import { checkRateLimit, getClientIp } from '$lib/server/rate-limit';
 
 // Note: prerender disabled to support form actions
 export const prerender = false;
@@ -23,6 +24,20 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions: Actions = {
     submitFeedback: async ({ request }) => {
         try {
+            // Rate limiting check (5 submissions per hour per IP)
+            const clientIp = getClientIp(request);
+            const rateLimitResult = checkRateLimit(clientIp, {
+                maxRequests: 5,
+                windowMs: 60 * 60 * 1000 // 1 hour
+            });
+
+            if (!rateLimitResult.allowed) {
+                const resetInMinutes = Math.ceil((rateLimitResult.resetAt - Date.now()) / 60000);
+                return fail(429, {
+                    error: `Too many feedback submissions. Please try again in ${resetInMinutes} minute${resetInMinutes !== 1 ? 's' : ''}.`
+                });
+            }
+
             const formData = await request.formData();
             const feedbackType = formData.get('feedbackType') as string;
             const postTitle = formData.get('postTitle') as string;
@@ -45,6 +60,13 @@ export const actions: Actions = {
                 });
             }
 
+            // Validate message length (max 10,000 characters)
+            if (message.length > 10000) {
+                return fail(400, {
+                    error: 'Message is too long. Please keep it under 10,000 characters.'
+                });
+            }
+
             // Validate email format if provided
             if (email && email.trim()) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -55,14 +77,25 @@ export const actions: Actions = {
                 }
             }
 
+            // Sanitize postSlug - only allow alphanumeric, hyphens, underscores, and forward slashes
+            const sanitizedPostSlug = postSlug.replace(/[^a-zA-Z0-9\-_\/]/g, '');
+            if (!sanitizedPostSlug || sanitizedPostSlug !== postSlug) {
+                return fail(400, {
+                    error: 'Invalid post identifier'
+                });
+            }
+
+            // Prevent email header injection - strip newlines from postTitle
+            const sanitizedPostTitle = postTitle.replace(/[\r\n]/g, ' ').trim();
+
             // Construct base URL
             const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5173';
 
             // Send feedback email using email service
             const result = await sendFeedbackEmail({
                 feedbackType: feedbackType as 'positive' | 'negative',
-                postTitle,
-                postSlug,
+                postTitle: sanitizedPostTitle,
+                postSlug: sanitizedPostSlug,
                 name: name || undefined,
                 email: email || undefined,
                 message,
