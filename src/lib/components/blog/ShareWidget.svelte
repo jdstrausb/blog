@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { PUBLIC_BASE_URL } from '$env/static/public';
+    import { env } from '$env/dynamic/public';
 
     type PlatformId = 'x' | 'bluesky' | 'linkedin' | 'hackernews' | 'reddit';
 
@@ -8,7 +8,8 @@
 
     let { postTitle, postSlug }: { postTitle: string; postSlug: string } = $props();
 
-    const normalizedBaseUrl = PUBLIC_BASE_URL?.replace(/\/$/, '') ?? '';
+    const publicBaseUrl = env.PUBLIC_BASE_URL ?? '';
+    const normalizedBaseUrl = publicBaseUrl ? publicBaseUrl.replace(/\/$/, '') : '';
     const canonicalPath = postSlug.startsWith('/') ? postSlug : `/${postSlug}`;
     const canonicalUrl = normalizedBaseUrl ? `${normalizedBaseUrl}${canonicalPath}` : '';
 

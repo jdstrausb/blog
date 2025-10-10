@@ -5,7 +5,7 @@
     import Header from '$lib/components/Header.svelte';
     import '../app.css';
     import favicon from '$lib/assets/favicon.svg';
-    import { PUBLIC_ANALYTICS_SITE_ID } from '$env/static/public';
+    import { env } from '$env/dynamic/public';
 
     let { data, children }: { data: PageData; children: Snippet } = $props();
 
@@ -13,19 +13,21 @@
     // The initial value comes from the server hook via `data.shared_settings`.
     ColorSchemeContext.set({ user: data.shared_settings.colorScheme });
 
-    if (!PUBLIC_ANALYTICS_SITE_ID && typeof console !== 'undefined') {
+    const analyticsSiteId = env.PUBLIC_ANALYTICS_SITE_ID;
+
+    if (!analyticsSiteId && typeof console !== 'undefined') {
         console.warn('Umami analytics disabled: PUBLIC_ANALYTICS_SITE_ID not provided.');
     }
 </script>
 
 <svelte:head>
     <link rel="icon" href={favicon} />
-    {#if PUBLIC_ANALYTICS_SITE_ID}
+    {#if analyticsSiteId}
         <script
             async
             defer
             src="https://analytics.umami.is/script.js"
-            data-website-id={PUBLIC_ANALYTICS_SITE_ID}
+            data-website-id={analyticsSiteId}
         ></script>
     {/if}
 </svelte:head>

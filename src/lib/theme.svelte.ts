@@ -1,7 +1,11 @@
 import { getContext, setContext } from 'svelte';
 import { MediaQuery } from 'svelte/reactivity';
-import { PUBLIC_COOKIE_NAME_COLOR_SCHEME } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 import type { ColorScheme } from '$lib/constants';
+import { DEFAULT_COLOR_SCHEME_COOKIE_NAME } from '$lib/constants';
+
+const colorSchemeCookieName =
+    env.PUBLIC_COOKIE_NAME_COLOR_SCHEME ?? DEFAULT_COLOR_SCHEME_COOKIE_NAME;
 
 interface ColorSchemeContextInit {
     // The user's preferred color scheme from SSR
@@ -41,7 +45,7 @@ export class ColorSchemeContext {
                 document.documentElement.dataset.colorScheme = this.resolved;
 
                 // Update the cookie to persist the user's preference.
-                document.cookie = `${PUBLIC_COOKIE_NAME_COLOR_SCHEME}=${this.user}; path=/; SameSite=Lax; Secure; max-age=604800`;
+                document.cookie = `${colorSchemeCookieName}=${this.user}; path=/; SameSite=Lax; Secure; max-age=604800`;
             }
         });
     }

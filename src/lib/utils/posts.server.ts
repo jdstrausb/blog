@@ -1,10 +1,4 @@
 import type { Component } from 'svelte';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import path from 'path';
-// import type { Picture } from 'vite-imagetools';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Calculate word count from raw markdown content
@@ -74,6 +68,11 @@ const postModules = import.meta.glob<GlobModule>('/src/posts/**/*.{md,svx}', {
     eager: true
 });
 
+const postContentModules = import.meta.glob<string>('/src/posts/**/*.{md,svx}', {
+    eager: true,
+    as: 'raw'
+});
+
 const normalizeSlug = (path: string) =>
     path
         .replace(/^\/src\/posts\//, '')
@@ -84,7 +83,8 @@ const normalizeSlug = (path: string) =>
 const coerceMetadata = (
     raw: Partial<BlogPostMetadata> | undefined,
     slug: string,
-    filePath: string
+    filePath: string,
+    rawContent?: string
 ): BlogPostMetadata | null => {
     if (!raw) return null;
 
@@ -106,14 +106,15 @@ const coerceMetadata = (
 
     // Read file content for word count calculation
     let wordCount: number | undefined;
-    try {
-        const projectRoot = path.resolve(__dirname, '../../../');
-        const fullPath = path.join(projectRoot, filePath.replace(/^\//, ''));
-        const content = readFileSync(fullPath, 'utf-8');
-        wordCount = calculateWordCount(content);
-    } catch (error) {
-        console.warn(`Could not calculate word count for ${filePath}:`, error);
-        wordCount = undefined;
+    if (typeof rawContent === 'string') {
+        try {
+            wordCount = calculateWordCount(rawContent);
+        } catch (error) {
+            console.warn(`Could not calculate word count for ${filePath}:`, error);
+            wordCount = undefined;
+        }
+    } else {
+        console.warn(`Could not calculate word count for ${filePath}: source content unavailable`);
     }
 
     // Generate author avatar path
@@ -142,7 +143,7 @@ const buildPosts = (): BlogPost[] => {
 
     for (const [path, module] of Object.entries(postModules)) {
         const slug = normalizeSlug(path);
-        const meta = coerceMetadata(module.metadata, slug, path);
+        const meta = coerceMetadata(module.metadata, slug, path, postContentModules[path]);
 
         if (!meta || !meta.published) continue;
 

@@ -1,7 +1,7 @@
 import { load_post_by_slug } from '$lib/utils/posts.server';
 import { error, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { PUBLIC_BASE_URL } from '$env/static/public';
+import { env } from '$env/dynamic/public';
 import { sendFeedbackEmail } from '$lib/server/email';
 import { checkRateLimit, getClientIp } from '$lib/server/rate-limit';
 
@@ -89,7 +89,7 @@ export const actions: Actions = {
             const sanitizedPostTitle = postTitle.replace(/[\r\n]/g, ' ').trim();
 
             // Construct base URL
-            const baseUrl = PUBLIC_BASE_URL || 'http://localhost:5173';
+            const baseUrl = env.PUBLIC_BASE_URL || 'http://localhost:5173';
 
             // Send feedback email using email service
             const result = await sendFeedbackEmail({
