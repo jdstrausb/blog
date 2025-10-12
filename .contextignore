@@ -1,0 +1,8 @@
+node_modules
+*_context.txt
+bun.lockb
+.svlete-kit
+.git
+.prettierrc
+.prettierignore
+*.svg

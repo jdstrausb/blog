@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  blog-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: blog-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src:cached
+      - ./static:/app/static:cached
+      - ./package.json:/app/package.json:ro
+      - ./svelte.config.js:/app/svelte.config.js:ro
+      - ./vite.config.ts:/app/vite.config.ts:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+    environment:
+      - NODE_ENV=development
+    command: bun run dev --host 0.0.0.0

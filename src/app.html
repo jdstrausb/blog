@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" class="%color-scheme%" data-color-scheme="%color-scheme%">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- general metadata tags -->
+        <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFFAF5" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#18140F" />
+
+        <script
+            async
+            src="https://analytics.yourdomain.com/script.js"
+            data-website-id="YOUR_WEBSITE_ID_HERE"
+        ></script>
+
+        <!-- SvelteKit Injected Header -->
+        %sveltekit.head%
+    </head>
+    <body data-sveltekit-preload-data="hover">
+        <!-- SvelteKit Hydrated Content -->
+        <div style="display: contents">%sveltekit.body%</div>
+    </body>
+</html>

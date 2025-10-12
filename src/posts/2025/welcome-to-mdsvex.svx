@@ -1,0 +1,62 @@
+---
+title: "Welcome to MDSvex"
+summary: "Overview of the new markdown + Svelte workflow powering the blog."
+author: "Jamie Strausbaugh"
+publishedAt: "2025-01-15"
+updatedAt: "2025-01-15"
+tags:
+  - mdsvex
+  - sveltekit
+  - content-workflow
+readingTime: 6
+published: true
+featuredImage: "$lib/assets/images/posts/mdsvex/franny-glass-01092022.png"
+---
+
+<script>
+  import EnhancedImage from '$lib/components/blog/EnhancedImage.svelte';
+  import CodeBlock from '$lib/components/blog/CodeBlock.svelte';
+
+  let count = 0;
+  const increment = () => count += 1;
+</script>
+
+Welcome to the evolved authoring experience. All future posts now live inside `.svx` files, giving writers the ability to mix markdown with Svelte.
+
+## Why MDSvex?
+
+- Interactive components without leaving markdown.
+- Clean frontmatter metadata for SEO, listings, and feeds.
+- Built-in syntax highlighting and image optimization.
+
+## Live Counter Demo
+
+<div class="not-prose">
+  <button onclick={increment} class="rounded bg-indigo-600 px-3 py-2 font-medium text-white">
+    Clicked {count} {count === 1 ? 'time' : 'times'}
+  </button>
+</div>
+
+## Highlighted Code
+
+```typescript
+function hello(name: string) {
+  return `Hello, ${name}!`;
+}
+```
+
+## Enhanced Image
+
+<EnhancedImage
+  src="$lib/assets/images/posts/mdsvex/franny-glass-01092022.png"
+  alt="Diagram showing markdown and Svelte integration"
+  class="rounded-lg shadow-lg"
+/>
+
+## Table of Contents
+
+The TOC component renders automatically in the sidebar.
+
+## Next Steps
+
+Expect more interactive tutorials and deep dives as we migrate historic posts into this new format.

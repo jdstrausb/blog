@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+.github
+
+# Dependencies
+node_modules
+
+# Build outputs
+.svelte-kit
+build
+.output
+.vercel
+.netlify
+.wrangler
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Documentation
+docs
+*.md
+README.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Database (removed but just in case)
+*.db
+*.db-shm
+*.db-wal
+drizzle
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Temporary files
+tmp
+temp
+*.tmp
