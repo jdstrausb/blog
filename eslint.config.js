@@ -23,7 +23,13 @@ export default ts.config(
         rules: {
             // typescript-eslint strongly recommend that you do not use the no-undef lint rule on TypeScript projects.
             // see: https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
-            'no-undef': 'off'
+            'no-undef': 'off',
+            // SvelteKit handles navigation internally - these hrefs are valid
+            'svelte/no-navigation-without-resolve': 'off',
+            // We use {@html} safely for sanitized SVG icons
+            'svelte/no-at-html-tags': 'off',
+            // Keys are not always necessary for simple static lists
+            'svelte/require-each-key': 'warn'
         }
     },
     {

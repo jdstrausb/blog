@@ -59,15 +59,6 @@
     const publishedDate = publishedAt ? new Date(publishedAt) : undefined;
     const updatedDate = updatedAt ? new Date(updatedAt) : undefined;
 
-    const formatted = (date?: Date) =>
-        date && !Number.isNaN(date.getTime())
-            ? date.toLocaleDateString(undefined, {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-              })
-            : undefined;
-
     // Format publication date as "Month YYYY"
     const formatPublicationDate = (date?: Date): string => {
         if (!date || Number.isNaN(date.getTime())) return '';

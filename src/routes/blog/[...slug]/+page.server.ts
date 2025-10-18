@@ -78,7 +78,7 @@ export const actions: Actions = {
             }
 
             // Sanitize postSlug - only allow alphanumeric, hyphens, underscores, and forward slashes
-            const sanitizedPostSlug = postSlug.replace(/[^a-zA-Z0-9\-_\/]/g, '');
+            const sanitizedPostSlug = postSlug.replace(/[^a-zA-Z0-9\-_/]/g, '');
             if (!sanitizedPostSlug || sanitizedPostSlug !== postSlug) {
                 return fail(400, {
                     error: 'Invalid post identifier'

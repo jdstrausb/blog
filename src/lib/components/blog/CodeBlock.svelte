@@ -1,7 +1,7 @@
 <script lang="ts">
     import { browser } from '$app/environment';
     import { onMount } from 'svelte';
-    import { createHighlighter } from 'shiki';
+    import { createHighlighter, type Highlighter } from 'shiki';
     import { ColorSchemeContext } from '$lib/theme.svelte';
 
     interface Props {
@@ -15,7 +15,7 @@
     let copySuccess = $state(false);
     let copyTimeout: ReturnType<typeof setTimeout> | null = null;
     let highlightedHtml = $state('');
-    let highlighter: any = null;
+    let highlighter: Highlighter | null = null;
 
     // Get theme context
     const colorScheme = ColorSchemeContext.get();
