@@ -15,7 +15,7 @@
     <header class="mb-12">
         <!-- Breadcrumb Navigation -->
         <Breadcrumb />
-        <h1 class="text-4xl font-serif font-bold tracking-tight text-[var(--text-color)]">Blog</h1>
+        <h1 class="font-serif text-4xl font-bold tracking-tight text-[var(--text-color)]">Blog</h1>
         <p class="mt-3 text-lg text-[var(--blog-description-color)]">
             Long-form tutorials, updates, and deep dives powered by MDSvex.
         </p>
@@ -31,7 +31,9 @@
         <div
             class="rounded-lg border border-dashed border-[var(--blog-empty-border)] p-10 text-center"
         >
-            <h2 class="text-2xl font-serif font-semibold text-[var(--blog-empty-heading)]">No posts yet</h2>
+            <h2 class="font-serif text-2xl font-semibold text-[var(--blog-empty-heading)]">
+                No posts yet
+            </h2>
             <p class="mt-2 text-[var(--blog-empty-text)]">
                 Create a new `.svx` file under <code>src/posts/</code> to publish your first article.
             </p>

@@ -49,10 +49,8 @@
       - vitesse-light
     */
 
-
     const highlightCode = async () => {
         if (!highlighter || !code || !language) return;
-
 
         try {
             const theme = colorScheme.resolved === 'dark' ? 'vitesse-dark' : 'vitesse-light';

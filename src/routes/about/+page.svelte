@@ -17,7 +17,8 @@
         <div class="w-full md:w-2/3">
             <div class="prose lg:prose-xl">
                 <p>
-                    I'm a hard-working full-stack developer. I enjoy tinkering with EPUB files and growing my knowledge of the world.
+                    I'm a hard-working full-stack developer. I enjoy tinkering with EPUB files and
+                    growing my knowledge of the world.
                 </p>
                 <p>
                     You can share your interests, professional background, or anything else you'd

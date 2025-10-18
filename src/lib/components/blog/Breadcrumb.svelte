@@ -10,7 +10,7 @@
     <!-- Home Icon -->
     <a
         href="/"
-        class="flex items-center text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover-color)] transition-colors"
+        class="flex items-center text-[var(--nav-link-color)] transition-colors hover:text-[var(--nav-link-hover-color)]"
         aria-label="Home"
     >
         <svg
@@ -20,7 +20,9 @@
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
         >
-            <path d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"/>
+            <path
+                d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"
+            />
         </svg>
     </a>
 
@@ -30,7 +32,7 @@
     <!-- Blog Link -->
     <a
         href="/blog"
-        class="text-[var(--nav-link-color)] hover:text-[var(--nav-link-hover-color)] transition-colors"
+        class="text-[var(--nav-link-color)] transition-colors hover:text-[var(--nav-link-hover-color)]"
     >
         Blog
     </a>
@@ -40,7 +42,7 @@
         <span class="text-[var(--blog-meta-color)]">/</span>
 
         <!-- Current Post Title (non-clickable) -->
-        <span class="font-medium text-[var(--blog-title-color)] truncate">
+        <span class="truncate font-medium text-[var(--blog-title-color)]">
             {title}
         </span>
     {/if}

@@ -21,7 +21,7 @@ const calculateWordCount = (content: string): number => {
     text = text.replace(/https?:\/\/[^\s]+/g, '');
 
     // Split by whitespace and filter empty strings
-    const words = text.split(/\s+/).filter(word => word.length > 0);
+    const words = text.split(/\s+/).filter((word) => word.length > 0);
 
     // Round to nearest 50
     const count = words.length;

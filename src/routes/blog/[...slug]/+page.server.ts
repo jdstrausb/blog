@@ -104,7 +104,7 @@ export const actions: Actions = {
 
             if (!result.success) {
                 return fail(500, {
-                    error: result.error || 'Your email couldn\'t be sent at this time'
+                    error: result.error || "Your email couldn't be sent at this time"
                 });
             }
 

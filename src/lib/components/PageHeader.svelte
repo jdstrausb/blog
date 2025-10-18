@@ -6,7 +6,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-between gap-4 sm:flex-row {class_name}">
-    <h1 class="text-center text-4xl font-serif font-bold text-[var(--text-color)] sm:text-left">
+    <h1 class="text-center font-serif text-4xl font-bold text-[var(--text-color)] sm:text-left">
         <a href="/">Jamie Strausbaugh</a>
     </h1>
     <nav class="flex items-center gap-4">

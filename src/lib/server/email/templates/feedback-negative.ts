@@ -2,21 +2,21 @@ import type { FeedbackEmailData, EmailTemplate } from '../types';
 
 // HTML escaping utility
 function escapeHtml(unsafe: string): string {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    return unsafe
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 export function generateNegativeFeedbackEmail(data: FeedbackEmailData): EmailTemplate {
-  const displayName = data.name?.trim() || 'Anonymous';
-  const displayEmail = data.email?.trim() || 'Not provided';
+    const displayName = data.name?.trim() || 'Anonymous';
+    const displayEmail = data.email?.trim() || 'Not provided';
 
-  const subject = `New feedback for improvement on: ${data.postTitle}`;
+    const subject = `New feedback for improvement on: ${data.postTitle}`;
 
-  const textBody = `Hello ${data.adminName},
+    const textBody = `Hello ${data.adminName},
 
 Reader ${displayName} (email: ${displayEmail}) sent the following feedback about your post, "${data.postTitle}":
 
@@ -27,7 +27,7 @@ View post: ${data.postUrl}
 ---
 This message was sent via the FeedbackWidget on your blog.`;
 
-  const htmlBody = `<p>Hello ${data.adminName},</p>
+    const htmlBody = `<p>Hello ${data.adminName},</p>
 
 <p>Reader <strong>${escapeHtml(displayName)}</strong> (email: ${escapeHtml(displayEmail)}) sent the following feedback about your post, <a href="${data.postUrl}">${escapeHtml(data.postTitle)}</a>:</p>
 
@@ -41,9 +41,9 @@ This message was sent via the FeedbackWidget on your blog.`;
 
 <p style="font-size: 0.9rem; color: #666;">This message was sent via the FeedbackWidget on your blog.</p>`;
 
-  return {
-    subject,
-    textBody,
-    htmlBody
-  };
+    return {
+        subject,
+        textBody,
+        htmlBody
+    };
 }

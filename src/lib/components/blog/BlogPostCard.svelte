@@ -43,7 +43,7 @@
         {/if}
     </div>
 
-    <h2 class="text-2xl font-serif font-semibold text-[var(--blog-card-title-color)]">
+    <h2 class="font-serif text-2xl font-semibold text-[var(--blog-card-title-color)]">
         <a href={`/blog/${post.slug}`} class="hover:text-[var(--blog-card-tag-category-color)]"
             >{post.title}</a
         >

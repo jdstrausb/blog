@@ -111,7 +111,9 @@
     <meta property="og:type" content="article" />
 </svelte:head>
 
-<article class="mx-auto max-w-[var(--article-max-width)] px-[var(--article-padding-x-mobile)] md:px-[var(--article-padding-x-tablet)] lg:px-[var(--article-padding-x-desktop)] py-8 md:py-12">
+<article
+    class="mx-auto max-w-[var(--article-max-width)] px-[var(--article-padding-x-mobile)] py-8 md:px-[var(--article-padding-x-tablet)] md:py-12 lg:px-[var(--article-padding-x-desktop)]"
+>
     <!-- Header Section: Breadcrumb → Title → Summary → Featured Image → Metadata -->
     <header class="mb-10 space-y-6 md:space-y-8">
         <!-- Breadcrumb Navigation -->
@@ -119,14 +121,16 @@
 
         <!-- Article Title (H1) - Single Display -->
         {#if title}
-            <h1 class="font-[family-name:var(--font-serif)] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--blog-title-color)] leading-tight">
+            <h1
+                class="font-[family-name:var(--font-serif)] text-3xl leading-tight font-bold tracking-tight text-[var(--blog-title-color)] md:text-4xl lg:text-5xl"
+            >
                 {title}
             </h1>
         {/if}
 
         <!-- Article Summary/Subtitle -->
         {#if summary}
-            <p class="text-lg md:text-xl text-[var(--blog-description-color)] leading-relaxed">
+            <p class="text-lg leading-relaxed text-[var(--blog-description-color)] md:text-xl">
                 {summary}
             </p>
         {/if}
@@ -154,11 +158,14 @@
             {#if tags?.length}
                 <ul class="flex flex-wrap items-center justify-end gap-2">
                     {#each tags as tag}
-                        {@const tagSlug = tag.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')}
+                        {@const tagSlug = tag
+                            .toLowerCase()
+                            .replace(/[^a-z0-9\s-]/g, '')
+                            .replace(/\s+/g, '-')}
                         <li>
                             <a
                                 href="/blog/categories/{tagSlug}"
-                                class="inline-block rounded-[var(--tag-pill-radius)] border border-[var(--tag-pill-border)] bg-[var(--tag-pill-bg)] px-[var(--tag-pill-padding-x)] py-[var(--tag-pill-padding-y)] text-xs font-medium uppercase tracking-wide text-[var(--tag-pill-text)] transition-colors hover:brightness-110"
+                                class="inline-block rounded-[var(--tag-pill-radius)] border border-[var(--tag-pill-border)] bg-[var(--tag-pill-bg)] px-[var(--tag-pill-padding-x)] py-[var(--tag-pill-padding-y)] text-xs font-medium tracking-wide text-[var(--tag-pill-text)] uppercase transition-colors hover:brightness-110"
                                 aria-label="View posts in {tag} category"
                             >
                                 {tag}
@@ -175,7 +182,10 @@
                         src={resolvedAuthorAvatar}
                         alt={author}
                         class="h-[var(--author-avatar-size)] w-[var(--author-avatar-size)] rounded-full object-cover"
-                        onerror={(e) => { (e.currentTarget as HTMLImageElement).src = '/authors/default-avatar.svg'; }}
+                        onerror={(e) => {
+                            (e.currentTarget as HTMLImageElement).src =
+                                '/authors/default-avatar.svg';
+                        }}
                     />
                     <div class="flex flex-col">
                         <p class="font-[var(--author-name-weight)] text-[var(--text-color)]">
@@ -192,7 +202,9 @@
             <div class="h-px w-full bg-[var(--metadata-border-color)]"></div>
 
             <!-- Reading Stats & Publication Date Row -->
-            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 text-sm text-[var(--metadata-text-subtle)]">
+            <div
+                class="flex flex-col gap-2 text-sm text-[var(--metadata-text-subtle)] sm:flex-row sm:items-start sm:justify-between"
+            >
                 <!-- Left: Reading Stats -->
                 <div class="flex flex-col gap-1">
                     <p>
@@ -222,7 +234,7 @@
     </header>
 
     <!-- Table of Contents (Mobile/Tablet - Below Metadata) -->
-    <div class="lg:hidden mb-8">
+    <div class="mb-8 lg:hidden">
         <TableOfContents {articleContainer} />
     </div>
 
@@ -236,7 +248,7 @@
         </div>
 
         <!-- Table of Contents (Desktop - Sidebar) -->
-        <aside class="hidden lg:block self-start lg:sticky lg:top-24">
+        <aside class="hidden self-start lg:sticky lg:top-24 lg:block">
             <TableOfContents {articleContainer} />
         </aside>
     </div>

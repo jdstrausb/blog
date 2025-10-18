@@ -159,7 +159,7 @@ export class ScrollToTopManager {
 
         return {
             destroy: () => {
-                this.destroyFunctions.forEach(fn => fn());
+                this.destroyFunctions.forEach((fn) => fn());
                 this.destroyFunctions = [];
             }
         };
@@ -179,8 +179,8 @@ export class ScrollToTopManager {
 
     scrollToTop() {
         window.scrollTo({
-          top: 0,
-          // behavior: 'smooth'
+            top: 0
+            // behavior: 'smooth'
         });
         // Button will automatically hide when scroll position reaches the top
     }

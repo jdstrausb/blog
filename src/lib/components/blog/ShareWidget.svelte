@@ -147,33 +147,39 @@
 </script>
 
 {#if renderedPlatforms.length}
-  <div class="mx-4 my-6 max-w-4xl rounded-xl border border-[var(--share-section-border)] bg-gradient-to-br from-[var(--share-section-bg-start)] to-[var(--share-section-bg-end)] px-6 py-8 text-center mb-12 sm:mx-auto">
-    <h2 class="mb-4 text-xl font-semibold tracking-wide text-[var(--text-color)]">
-        Share this post
-    </h2>
-    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
-        {#each renderedPlatforms as platform}
-            <a
-                class="flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
-                href={platform.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`Share on ${platform.label}`}
-                onclick={withTracking(platform.label)}
+    <div
+        class="mx-4 my-6 mb-12 max-w-4xl rounded-xl border border-[var(--share-section-border)] bg-gradient-to-br from-[var(--share-section-bg-start)] to-[var(--share-section-bg-end)] px-6 py-8 text-center sm:mx-auto"
+    >
+        <h2 class="mb-4 text-xl font-semibold tracking-wide text-[var(--text-color)]">
+            Share this post
+        </h2>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+            {#each renderedPlatforms as platform}
+                <a
+                    class="flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
+                    href={platform.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Share on ${platform.label}`}
+                    onclick={withTracking(platform.label)}
+                >
+                    <span class="h-5 w-5 flex-shrink-0" aria-hidden="true"
+                        >{@html platform.icon}</span
+                    >
+                    <span class="text-xs sm:text-sm">{platform.label}</span>
+                </a>
+            {/each}
+            <button
+                type="button"
+                class="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
+                onclick={handleCopy}
+                aria-label={copied ? 'Link copied!' : 'Copy link to clipboard'}
             >
-                <span class="h-5 w-5 flex-shrink-0" aria-hidden="true">{@html platform.icon}</span>
-                <span class="text-xs sm:text-sm">{platform.label}</span>
-            </a>
-        {/each}
-        <button
-            type="button"
-            class="cursor-pointer flex items-center justify-center gap-2 rounded-md border border-[var(--menu-border)] bg-[var(--share-button-bg)] px-4 py-2 text-sm font-medium text-[var(--share-button-text)] transition hover:bg-[var(--share-button-hover-bg)] hover:text-[var(--text-color)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-400 dark:focus-visible:outline-gray-500"
-            onclick={handleCopy}
-            aria-label={copied ? 'Link copied!' : 'Copy link to clipboard'}
-        >
-            <span class="h-5 w-5 flex-shrink-0" aria-hidden="true">{@html copied ? checkIcon : linkIcon}</span>
-            <span class="text-xs sm:text-sm">{copied ? 'Copied!' : 'Copy'}</span>
-        </button>
+                <span class="h-5 w-5 flex-shrink-0" aria-hidden="true"
+                    >{@html copied ? checkIcon : linkIcon}</span
+                >
+                <span class="text-xs sm:text-sm">{copied ? 'Copied!' : 'Copy'}</span>
+            </button>
+        </div>
     </div>
-  </div>
 {/if}
