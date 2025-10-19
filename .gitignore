@@ -28,8 +28,6 @@ vite.config.ts.timestamp-*
 *.db-wal
 
 # Production-specific files (not tracked in repo)
-docker-compose.prod.yml
-docker/nginx/nginx.prod.conf
 deploy.sh
 deploy-with-logging.sh
 manual-renewal.sh
